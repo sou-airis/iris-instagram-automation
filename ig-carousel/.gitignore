@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials/
+__pycache__/
+*.pyc
+.venv/
+*.jpg
+*.jpeg
+*.png
+!assets/bg.jpg
+!assets/infografico-referencia.png
+!assets/iris-avatar.jpg

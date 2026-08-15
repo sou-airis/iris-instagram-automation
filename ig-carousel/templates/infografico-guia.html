@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family: 'Bebas Neue';
+    src: url('file://<HOME>/.fonts/BebasNeue-Regular.ttf');
+  }
+  @font-face {
+    font-family: 'Dancing Script';
+    src: url('file://<HOME>/.fonts/DancingScript.ttf');
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1350px; }
+  body {
+    background: #F7EBDC;
+    font-family: 'Noto Sans', sans-serif;
+    color: #2B2118;
+    display: flex;
+    flex-direction: column;
+    padding: 44px 52px 40px;
+  }
+
+  /* ---------- HEADER ---------- */
+  .header { display: flex; align-items: center; gap: 26px; }
+  .title-block { flex: 1; }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-weight: 400;
+    font-size: 96px;
+    line-height: 0.92;
+    letter-spacing: 2px;
+    color: #2B2118;
+  }
+  h1 .gold { color: #B78858; }
+  .subtitle {
+    margin-top: 14px;
+    display: flex; align-items: center; gap: 18px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 44px;
+    color: #2B2118;
+  }
+  .subtitle .rule { flex: 1; height: 2px; background: #B78858; }
+  .subtitle .diamond { color: #B78858; font-size: 18px; }
+  .mascot-hero { width: 148px; flex-shrink: 0; }
+
+  /* ---------- GRID ---------- */
+  .grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 22px;
+    margin-top: 30px;
+  }
+  .card {
+    position: relative;
+    background: #FDF5EA;
+    border: 2px solid #EAD9BE;
+    border-radius: 18px;
+    padding: 20px 20px 16px 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .card-top { display: flex; align-items: center; gap: 14px; }
+  .num {
+    width: 58px; height: 58px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #B78858;
+    color: #FDF5EA;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    display: flex; align-items: center; justify-content: center;
+    padding-top: 2px;
+  }
+  .card h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 34px;
+    letter-spacing: 1.5px;
+    color: #2B2118;
+  }
+  .card p {
+    margin-top: 12px;
+    font-size: 21px;
+    line-height: 1.3;
+    color: #4A3B2A;
+    padding-right: 78px;
+  }
+  .card .robot {
+    position: absolute;
+    right: 14px; bottom: 12px;
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    border: 2px solid #B78858;
+    background: #F7EBDC;
+    padding: 4px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card .robot img { height: 100%; }
+
+  /* ---------- BONUS ---------- */
+  .bonus {
+    margin-top: 24px;
+    background: #B78858;
+    border-radius: 16px;
+    padding: 16px 22px;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .bonus .tag {
+    background: #2B2118;
+    color: #F7EBDC;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 2px;
+    padding: 6px 18px 4px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .bonus .txt {
+    color: #FDF5EA;
+    font-size: 25px;
+    line-height: 1.15;
+  }
+  .bonus .txt code {
+    font-family: 'Noto Sans Mono', monospace;
+    font-weight: 700;
+    background: rgba(43,33,24,0.25);
+    border-radius: 6px;
+    padding: 1px 8px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .footer {
+    margin-top: 26px;
+    display: flex; align-items: center; justify-content: center; gap: 18px;
+  }
+  .avatar {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    border: 3px solid #B78858;
+    object-fit: cover;
+  }
+  .footer .name { font-size: 27px; font-weight: 700; color: #2B2118; }
+  .footer .handle { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; color: #B78858; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="title-block">
+      <h1>CLAUDE CODE<br>AGORA <span class="gold">TEM CRON</span></h1>
+      <div class="subtitle">
+        <div class="rule"></div>
+        <span class="diamond">◆</span>
+        <span>Não é lembrete. É o agente trabalhando sem você.</span>
+        <span class="diamond">◆</span>
+        <div class="rule"></div>
+      </div>
+    </div>
+    <img class="mascot-hero" src="robot.png" alt="">
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-top"><div class="num">1</div><h2>AGENDE UM PROMPT</h2></div>
+      <p>Ele reexecuta sozinho no intervalo que você marcar.</p>
+      <div class="robot"><img src="robot.png" alt=""></div>
+    </div>
+    <div class="card">
+      <div class="card-top"><div class="num">2</div><h2>PRA QUE SERVE</h2></div>
+      <p>Monitorar deploy, acompanhar PR, checar build longo.</p>
+      <div class="robot"><img src="robot.png" alt=""></div>
+    </div>
+    <div class="card">
+      <div class="card-top"><div class="num">3</div><h2>TRÊS MODOS</h2></div>
+      <p>/loop na sessão · tarefa no Desktop · Routine na nuvem.</p>
+      <div class="robot"><img src="robot.png" alt=""></div>
+    </div>
+    <div class="card">
+      <div class="card-top"><div class="num">4</div><h2>NUVEM VS. DESKTOP</h2></div>
+      <p>Nuvem roda sem máquina ligada; Desktop acessa seus arquivos.</p>
+      <div class="robot"><img src="robot.png" alt=""></div>
+    </div>
+    <div class="card">
+      <div class="card-top"><div class="num">5</div><h2>VALIDADE</h2></div>
+      <p>Tarefa expira em 7 dias; --resume traz de volta o que ainda vale.</p>
+      <div class="robot"><img src="robot.png" alt=""></div>
+    </div>
+    <div class="card">
+      <div class="card-top"><div class="num">6</div><h2>INTERVALOS</h2></div>
+      <p>1 min no /loop e Desktop; 1 hora na nuvem; ou expressão cron.</p>
+      <div class="robot"><img src="robot.png" alt=""></div>
+    </div>
+  </div>
+
+  <div class="bonus">
+    <div class="tag">BÔNUS</div>
+    <div class="txt"><code>/loop 5m check the deploy</code> — roda a cada 5 minutos, sozinho.</div>
+  </div>
+
+  <div class="footer">
+    <img class="avatar" src="file://<HERMES_HOME>/skills/social-media/ig-carousel/assets/iris-avatar.jpg" alt="">
+    <div>
+      <div class="name">Íris Nova — Especialista em IA</div>
+      <div class="handle">@SOU.AIRIS</div>
+    </div>
+  </div>
+</body>
+</html>

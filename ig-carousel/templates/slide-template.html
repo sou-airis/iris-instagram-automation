@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>slide</title>
+<style>
+  @font-face {
+    font-family: "Darker Grotesque";
+    src: url("file://<HOME>/.fonts/DarkerGrotesque-ExtraBold.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Newsreader";
+    src: url("file://<HOME>/.fonts/Newsreader-VF.ttf") format("truetype");
+    font-weight: 200 800;
+    font-style: normal;
+  }
+  :root {
+    --bg: #0A0A0A;
+    --ink: #F2EDE4;
+    --accent: #E23D28;
+    --muted: #8A847A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1350px; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    position: relative;
+    overflow: hidden;
+    font-family: "Newsreader", "Newsreader 16pt", serif;
+  }
+  /* textura fixa da identidade — não gerar por post */
+  .bg {
+    position: absolute;
+    inset: 0;
+    background: url("file://<HERMES_HOME>/skills/social-media/ig-carousel/assets/bg.jpg") center / cover no-repeat;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .brand {
+    position: absolute;
+    top: 88px;
+    left: 88px;
+    font-family: "Darker Grotesque", "Darker Grotesque Light", sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .number {
+    position: absolute;
+    right: 72px;
+    bottom: 64px;
+    font-family: "Darker Grotesque", "Darker Grotesque Light", sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  /* âncora no terço central-inferior; hook cai no crop 1:1 (y 135–1215) */
+  .content {
+    position: absolute;
+    left: 88px;
+    right: 160px;
+    bottom: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 36px;
+  }
+  .mark {
+    width: 4px;
+    height: 56px;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .titulo {
+    font-family: "Darker Grotesque", "Darker Grotesque Light", sans-serif;
+    font-weight: 800;
+    font-size: 84px;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-align: left;
+    max-width: 820px;
+  }
+  .corpo {
+    font-family: "Newsreader", "Newsreader 16pt", serif;
+    font-weight: 400;
+    font-size: 38px;
+    line-height: 1.35;
+    text-align: left;
+    max-width: 620px;
+    color: var(--ink);
+  }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="brand">íris</div>
+  <div class="content">
+    <div class="mark"></div>
+    <div class="titulo">{{titulo}}</div>
+    <div class="corpo">{{corpo}}</div>
+  </div>
+  <div class="number">{{numero}}</div>
+</body>
+</html>

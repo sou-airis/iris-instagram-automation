@@ -91,15 +91,15 @@ Os artefatos de cada post ficam em `~/.hermes/ig/<slug>/`: os JPEGs (`01.jpg`, `
 | Conta Cloudflare | `<CLOUDFLARE_ACCOUNT_ID>` |
 | URL pública (r2.dev) | `https://<R2_PUBLIC_ID>.r2.dev` |
 | Token R2 vigente | `<R2_TOKEN_NAME>` (Object Read & Write, escopo: só o bucket `ig-carrossel`) |
-| Cofre de credenciais | `<ENV_FILE>` (chmod 600) |
-| Ambiente de render | `<VENV>` (playwright + pillow + boto3) |
+| Cofre de credenciais | `~/.hermes/.env` (chmod 600) |
+| Ambiente de render | venv local do pipeline (playwright + pillow + boto3) |
 | Navegador | Chromium headless do Playwright em `~/.cache/ms-playwright` |
 | Fontes | Hook: Darker Grotesque · Corpo: Newsreader · Emoji: Noto Color Emoji |
 | Identidade visual | "Redação": fundo `#0A0A0A`, tinta `#F2EDE4`, destaque `#E23D28` |
 | Cron de refresh | `ig-token-refresh` (id `<JOB_REFRESH_ID>`) — dias 1 e 15, 12:00 UTC, entrega no Telegram (chat `<TELEGRAM_CHAT_ID>`) |
 | Gateway | serviço systemd `hermes-gateway` com `Restart=always` |
 
-Cofre (`<ENV_FILE>`) guarda exatamente estas chaves: `IG_ACCESS_TOKEN`, `<IG_USER_ID>`, `R2_BUCKET`, `R2_ENDPOINT`, `R2_PUBLIC_URL`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`. Os valores delas **nunca** aparecem em chat, log, commit ou arquivo da skill.
+Cofre (`~/.hermes/.env`) guarda exatamente estas chaves: `IG_ACCESS_TOKEN`, `<IG_USER_ID>`, `R2_BUCKET`, `R2_ENDPOINT`, `R2_PUBLIC_URL`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`. Os valores delas **nunca** aparecem em chat, log, commit ou arquivo da skill.
 
 Primeiro carrossel publicado (teste real): `claude-fable-5` → https://www.instagram.com/p/Db_4jrkEaPI/
 
@@ -140,11 +140,11 @@ Ordem sugerida:
 
 1. **App Meta + token** — developers.facebook.com → Meus apps → criar app (caso de uso Instagram), manter em Development mode. Menu Instagram → Configuração da API com login do Instagram → gerar token com a permissão `instagram_business_content_publish`. Anotar o **token** e o **ID da conta** (`sou.airis` → `<IG_USER_ID>`).
 2. **Bucket R2** — Cloudflare → R2 → criar `ig-carrossel` → Settings → habilitar acesso público (subdomínio `r2.dev`) → criar API token Read & Write só desse bucket.
-3. **Cofre** — criar `<ENV_FILE>` (chmod 600) com as 7 chaves listadas acima.
-4. **Ambiente** — `python3 -m venv --without-pip <VENV>` + `curl -sS https://bootstrap.pypa.io/get-pip.py | <VENV>/bin/python` + `pip install playwright pillow boto3` + `playwright install chromium`. Fontes (Darker Grotesque, Newsreader) em `~/.fonts`.
+3. **Cofre** — criar `~/.hermes/.env` (chmod 600) com as 7 chaves listadas acima.
+4. **Ambiente** — `python3 -m venv --without-pip <VENV_IG>` + `curl -sS https://bootstrap.pypa.io/get-pip.py | <VENV_IG>/bin/python` + `pip install playwright pillow boto3` + `playwright install chromium`. Fontes (Darker Grotesque, Newsreader) em `~/.fonts`.
 5. **Skill** — restaurar esta pasta (`git` local em `skills/social-media/ig-carousel/`, ou recriar os arquivos). Garantir `assets/bg.jpg` presente.
 6. **Testar** — subir um `teste.jpg` no R2 e rodar `curl -I` (esperar 200 + image/jpeg). Depois um post de teste (Fase 1: container → poll → publish → permalink) e apagar pelo app.
-7. **Cron** — recriar `ig-token-refresh` com o script `<HERMES_HOME>/scripts/ig_refresh_token.py`.
+7. **Cron** — recriar `ig-token-refresh` com o script `~/scripts/ig_refresh_token.py`.
 
 ---
 

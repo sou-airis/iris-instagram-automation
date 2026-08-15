@@ -4,7 +4,7 @@ Peça âncora: Toast 1 (`toast-1-busca-20260815`) — https://www.instagram.com/
 
 Chat lê e executa a seção **Chat**. Cron lê e executa a seção **Cron**.
 Cron também lê persona §3.7.
-Pipeline: `<VENV>/bin/python <HERMES_HOME>/skills/social-media/ig-carousel/scripts/pipeline.py`
+Pipeline: `<venv-do-pipeline>/bin/python <caminho-da-skill>/scripts/pipeline.py`
 
 ## Prompt
 

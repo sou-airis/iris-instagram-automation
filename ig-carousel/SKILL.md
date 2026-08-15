@@ -49,7 +49,7 @@ Mudança relevante nesta pasta → `git commit` com mensagem descritiva. Sem tok
 - `formato` = `carrossel` (padrão) | `infografico` (1 imagem).
 - Artefatos em `~/.hermes/ig/<slug>/`: `NN.jpg`, `copy.json`, `state.json`, `package.json`.
 - Pesquisa e copy são feitas pelo AGENTE (LLM). O `pipeline.py` executa só o determinístico (render/upload/package/status/publish), em subcomandos resumíveis (checkpoint por slide).
-- Venv de render: `<VENV>/bin/python` (playwright, pillow, boto3). Browser: `~/.cache/ms-playwright`.
+- Venv de render: venv local do pipeline (playwright, pillow, boto3). Browser: cache local do Playwright.
 
 ## Regras permanentes (nunca violar)
 
@@ -57,7 +57,7 @@ Mudança relevante nesta pasta → `git commit` com mensagem descritiva. Sem tok
 2. NUNCA navegador/browser logado no Instagram, nem como fallback — risco de bloqueio da conta. API falhou → mostra o erro exato e PARA.
 3. NUNCA ação destrutiva (matar processo, derrubar porta, deletar fora de `~/.hermes/ig/`) sem perguntar antes.
 4. NUNCA imprimir IG_ACCESS_TOKEN em chat, log ou mensagem de erro.
-4b. NUNCA escrever credenciais literais em scripts (.py, .sh, .json) nem em qualquer arquivo fora de `<ENV_FILE>` — inclusive temporários que serão apagados. O conteúdo de `write_file` aparece na UI do Hermes. Ler sempre via `os.environ` / dotenv.
+4b. NUNCA escrever credenciais literais em scripts (.py, .sh, .json) nem em qualquer arquivo fora de `~/.hermes/.env` — inclusive temporários que serão apagados. O conteúdo de `write_file` aparece na UI do Hermes. Ler sempre via `os.environ` / dotenv.
 5. Erro → mostra o erro exato e para. Não improvisa alternativa.
 6. Slug já "publicado" (state.json) → recusa republicar.
 7. Sem "publica" do usuário → não publica. Exceção: o cron `iris-infografico-diario` (`<JOB_INFOGRAFICO_ID>`) é pré-autorizado a publicar 1 infográfico por tick após o auto-gate (não carrega esta skill). Carrossel: sem confirmação em fonte primária → não escreve. Infográfico no chat: não exige fonte primária antes de desenhar.
@@ -78,9 +78,14 @@ Executar `references/infografico-visual.md`, seção **Chat**. Não reescrever a
 
 ## Credenciais
 
-`<ENV_FILE>` (chmod 600): `IG_ACCESS_TOKEN`, `<IG_USER_ID>`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, `R2_BUCKET`, `R2_PUBLIC_URL`.
+`~/.hermes/.env` (chmod 600): `IG_ACCESS_TOKEN`, `<IG_USER_ID>`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, `R2_BUCKET`, `R2_PUBLIC_URL`.
 Token NUNCA em chat/log/erro.
 
 ## Uso diário
 
 "saiu <funcionalidade> no Claude. Fonte: <link se tiver>. Ângulo: <o que destacar>."
+
+## Espelho GitHub (manual, sem automação)
+
+A cada commit de mudança na skill, PERGUNTAR ao usuário: "sincronizar o espelho no GitHub?".
+Sim → archive + allow-list (tracked files menos `DECISIONS.md`) → `~/iris-instagram-automation/ig-carousel/` → commit → push via GIT_ASKPASS. Pre-push hook é o gate — bloqueou = mostrar e parar. Sem cron, sem config, sem log.

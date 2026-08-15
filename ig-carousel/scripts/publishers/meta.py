@@ -266,7 +266,7 @@ def _attempt_single(user_id: str, token: str, url: str, alt_text: str, caption: 
 def publish(package: dict, env: dict) -> dict:
     """Publica carrossel ou imagem única (campo formato). Retorna {"ok": bool, "url": str|None, "error": str|None}."""
     token = env.get("IG_ACCESS_TOKEN", "")
-    user_id = env.get("<IG_USER_ID>", "")
+    user_id = env.get("IG_USER_ID", "")
     if not token or not user_id:
         return {"ok": False, "url": None, "error": "faltam IG_ACCESS_TOKEN/<IG_USER_ID> no .env"}
     urls = package.get("urls") or []

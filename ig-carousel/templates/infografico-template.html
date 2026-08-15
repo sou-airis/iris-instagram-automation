@@ -6,13 +6,13 @@
 <style>
   @font-face {
     font-family: "Darker Grotesque";
-    src: url("file://<HOME>/.fonts/DarkerGrotesque-ExtraBold.ttf") format("truetype");
+    src: url("{{FONTS_DIR}}/DarkerGrotesque-ExtraBold.ttf") format("truetype");
     font-weight: 100 900;
     font-style: normal;
   }
   @font-face {
     font-family: "Newsreader";
-    src: url("file://<HOME>/.fonts/Newsreader-VF.ttf") format("truetype");
+    src: url("{{FONTS_DIR}}/Newsreader-VF.ttf") format("truetype");
     font-weight: 200 800;
     font-style: normal;
   }
@@ -36,7 +36,7 @@
   .bg {
     position: absolute;
     inset: 0;
-    background: url("file://<HERMES_HOME>/skills/social-media/ig-carousel/assets/bg.jpg") center / cover no-repeat;
+    background: url("{{ASSETS_DIR}}/bg.jpg") center / cover no-repeat;
     opacity: 0.6;
     pointer-events: none;
   }

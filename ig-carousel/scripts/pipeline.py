@@ -24,6 +24,16 @@ SKILL_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE = SKILL_DIR / "templates" / "slide-template.html"
 INFO_TEMPLATE = SKILL_DIR / "templates" / "infografico-template.html"
 BASE_OUT = HOME / ".hermes" / "ig"
+FONTS_DIR = HOME / ".fonts"
+
+
+def resolve_render_tokens(t: str) -> str:
+    """Troca tokens de caminho por file:// absolutos no momento do render.
+
+    Os templates commitados usam {{FONTS_DIR}}/{{ASSETS_DIR}} (sem paths do
+    servidor — gate pre-push); aqui resolvem para o filesystem real."""
+    return (t.replace("{{FONTS_DIR}}", FONTS_DIR.as_uri())
+             .replace("{{ASSETS_DIR}}", (SKILL_DIR / "assets").as_uri()))
 
 W, H = 1080, 1350
 JPEG_Q = 90
@@ -51,7 +61,7 @@ def load_env() -> dict:
             continue
         k, _, v = line.partition("=")
         env[k.strip()] = v.strip().strip('"').strip("'")
-    missing = [k for k in ("IG_ACCESS_TOKEN", "<IG_USER_ID>", "R2_ACCESS_KEY_ID",
+    missing = [k for k in ("IG_ACCESS_TOKEN", "IG_USER_ID", "R2_ACCESS_KEY_ID",
                            "R2_SECRET_ACCESS_KEY", "R2_ENDPOINT", "R2_BUCKET",
                            "R2_PUBLIC_URL") if not env.get(k)]
     if missing:
@@ -172,7 +182,7 @@ def _render_infografico(slug: str, copy: dict, out: Path) -> None:
         blocos = copy.get("blocos")
         if not blocos or not isinstance(blocos, list) or not 1 <= len(blocos) <= 8:
             err("infografico: copy.json precisa de 'blocos' (1-8) para render HTML, ou de 01.jpg já gerado (image_generate + convert)")
-        tmpl = INFO_TEMPLATE.read_text() if INFO_TEMPLATE.exists() else err(f"template não encontrado: {INFO_TEMPLATE}")
+        tmpl = resolve_render_tokens(INFO_TEMPLATE.read_text()) if INFO_TEMPLATE.exists() else err(f"template não encontrado: {INFO_TEMPLATE}")
         parts = []
         for i, b in enumerate(blocos, 1):
             titulo = html.escape(str(b.get("titulo", "")))
@@ -214,7 +224,7 @@ def cmd_render(args) -> None:
     n = len(slides)
     if not 2 <= n <= 12:
         err(f"copy.json com {n} slides — esperado 6-8 (aceito 2-12)")
-    tmpl = TEMPLATE.read_text() if TEMPLATE.exists() else err(f"template não encontrado: {TEMPLATE}")
+    tmpl = resolve_render_tokens(TEMPLATE.read_text()) if TEMPLATE.exists() else err(f"template não encontrado: {TEMPLATE}")
 
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:

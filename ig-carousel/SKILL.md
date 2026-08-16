@@ -71,8 +71,8 @@ Mudança relevante nesta pasta → `git commit` com mensagem descritiva. Sem tok
      O pre-commit hook (~/.git-hooks/pre-commit) bloqueia marcadores. -->
 
 1. **RE-LER** — reler `references/infografico-visual.md` DO DISCO (não vale snapshot do início da sessão: o arquivo muda por outras sessões).
-2. **EXECUTAR** a seção **Chat** do visual.md, nesta ordem: montar `<TEMA>` → gerar (4:5) → `convert` → mostrar → **parar**.
-3. **PUBLICA** — só com "publica": `copy.json` → `package` → `upload` → `publish`.
+2. **EXECUTAR** a seção **Chat** do visual.md, nesta ordem: montar `<TEMA>` → gerar (4:5) → `convert` → `upload` (R2) → mostrar com **link** → **parar**.
+3. **PUBLICA** — só com "publica": a mensagem de aprovação SEMPRE inclui o link público da imagem (anexo pode falhar em silêncio); depois `copy.json` → `package` → `upload` → `publish`.
 
 ## Pipeline — carrossel
 

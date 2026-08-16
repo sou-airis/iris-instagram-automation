@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""pipeline.py — etapas determinísticas do ig-carousel.
+"""pipeline.py — etapas determinísticas do ig-posts.
 
 Subcomandos: render | upload | package | publish | status | validate
 
@@ -354,7 +354,7 @@ def cmd_convert(args) -> None:
 # ---------- main ----------
 
 def main() -> None:
-    ap = argparse.ArgumentParser(prog="pipeline.py", description="ig-carousel: render/upload/package/publish/status")
+    ap = argparse.ArgumentParser(prog="pipeline.py", description="ig-posts: render/upload/package/publish/status")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     p = sub.add_parser("render", help="renderiza JPEGs 1080x1350 a partir de copy.json (checkpoint por slide)")

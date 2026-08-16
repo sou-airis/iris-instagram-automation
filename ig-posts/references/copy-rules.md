@@ -1,4 +1,4 @@
-# Regras de copy — ig-carousel
+# Regras de copy — ig-posts
 
 Leia e siga em TODA execução. Quando o usuário calibrar visual/copy, atualize ESTE arquivo (não improvise).
 

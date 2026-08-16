@@ -1,6 +1,6 @@
 ---
-name: ig-carousel
-description: "Carrossel para Instagram: pesquisa, copy, render, publica."
+name: ig-posts
+description: "Posts para Instagram: carrossel, infográfico e story — pesquisa, copy, render, publica."
 version: 1.0.0
 author: hermes
 license: MIT
@@ -9,7 +9,7 @@ metadata:
   related_skills: [news-research-reporting]
 ---
 
-# ig-carousel — carrossel de notícia para Instagram
+# ig-posts — posts para Instagram (carrossel, infográfico, story)
 
 Publica carrosséis no Instagram do usuário a partir de notícias/features verificadas.
 Gatilho típico: "saiu X no Claude, faz carrossel" + (opcional) fonte + ângulo.
@@ -24,7 +24,7 @@ Gatilho típico: "saiu X no Claude, faz carrossel" + (opcional) fonte + ângulo.
 ## Arquitetura (inegociável)
 
 ```
-skills/ig-carousel/
+skills/ig-posts/
   SKILL.md
   DECISIONS.md                 ← histórico de decisões; LER a cada execução
   references/persona-iris.md   ← voz v1.4; LER a cada execução
@@ -96,4 +96,4 @@ Token NUNCA em chat/log/erro.
 ## Espelho GitHub (manual, sem automação)
 
 A cada commit de mudança na skill, PERGUNTAR ao usuário: "sincronizar o espelho no GitHub?".
-Sim → archive + allow-list (tracked files menos `DECISIONS.md`) → `~/iris-instagram-automation/ig-carousel/` → commit → push via GIT_ASKPASS. Pre-push hook é o gate — bloqueou = mostrar e parar. Sem cron, sem config, sem log.
+Sim → archive + allow-list (tracked files menos `DECISIONS.md`) → `~/iris-instagram-automation/ig-posts/` → commit → push via GIT_ASKPASS. Pre-push hook é o gate — bloqueou = mostrar e parar. Sem cron, sem config, sem log.

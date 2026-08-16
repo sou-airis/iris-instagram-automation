@@ -75,7 +75,7 @@ Passo a passo, com o erro típico de cada etapa:
 2. **Testador + token** — criar testador pela **web**, gerar token com a permissão `instagram_content_publish`, validar com `GET /me?fields=id,username`. *Erro:* tentar a troca short→long; ignorar o `expires_in` (~60 dias) e esquecer do refresh.
 3. **Armazenamento** — criar bucket `<R2_BUCKET>` (ou S3), gerar par de chaves com escopo **só no bucket**. *Erro:* token com escopo amplo; ou pior, secret escrito literal em script temporário — a UI do Hermes renderiza o conteúdo, e token vira vazamento.
 4. **Cofre** — gravar no `<ENV_FILE>` (chmod 600): `IG_ACCESS_TOKEN`, `IG_USER_ID`, `R2_*`. *Erro:* colocar no `config.yaml` ou em chat — nunca.
-5. **Skill + receita** — instalar a skill `ig-carousel` e o `references/infografico-visual.md`. *Erro:* criar um segundo manifesto da receita no cron — edição dupla e drift (ver L15).
+5. **Skill + receita** — instalar a skill `ig-posts` e o `references/infografico-visual.md`. *Erro:* criar um segundo manifesto da receita no cron — edição dupla e drift (ver L15).
 6. **Cron (opcional)** — criar o job com horário, destino `<TELEGRAM_CHAT_ID>`, prompt **fino** apontando para o `.md` (ponteiro + exclusivos do job + 5 travas). *Erro:* copiar o fluxo inteiro no prompt do job — é o L15 de novo, mais barato de evitar na origem.
 
 ## 6. A receita

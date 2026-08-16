@@ -1,4 +1,4 @@
-# ig-carousel — automação de carrossel no Instagram (@sou.airis)
+# ig-posts — automação de posts no Instagram (@sou.airis)
 
 Guia de consulta rápida. Escrito para quem entende de IA mas não é programador.
 Voz da Íris: `references/persona-iris.md` (v1.4). Regras de texto e visual: `references/copy-rules.md`. Decisões: `DECISIONS.md`.
@@ -142,7 +142,7 @@ Ordem sugerida:
 2. **Bucket R2** — Cloudflare → R2 → criar `ig-carrossel` → Settings → habilitar acesso público (subdomínio `r2.dev`) → criar API token Read & Write só desse bucket.
 3. **Cofre** — criar `~/.hermes/.env` (chmod 600) com as 7 chaves listadas acima.
 4. **Ambiente** — `python3 -m venv --without-pip <VENV_IG>` + `curl -sS https://bootstrap.pypa.io/get-pip.py | <VENV_IG>/bin/python` + `pip install playwright pillow boto3` + `playwright install chromium`. Fontes (Darker Grotesque, Newsreader) em `~/.fonts`.
-5. **Skill** — restaurar esta pasta (`git` local em `skills/social-media/ig-carousel/`, ou recriar os arquivos). Garantir `assets/bg.jpg` presente.
+5. **Skill** — restaurar esta pasta (`git` local em `skills/social-media/ig-posts/`, ou recriar os arquivos). Garantir `assets/bg.jpg` presente.
 6. **Testar** — subir um `teste.jpg` no R2 e rodar `curl -I` (esperar 200 + image/jpeg). Depois um post de teste (Fase 1: container → poll → publish → permalink) e apagar pelo app.
 7. **Cron** — recriar `ig-token-refresh` com o script `~/scripts/ig_refresh_token.py`.
 

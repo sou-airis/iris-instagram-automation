@@ -14,7 +14,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 BASE = Path(__file__).resolve().parent  # templates/
-SKILL_ROOT = BASE.parent                # ig-carousel/
+SKILL_ROOT = BASE.parent                # ig-posts/
 ASSETS_DIR = SKILL_ROOT / "assets"
 FONTS_DIR = Path.home() / ".fonts"
 

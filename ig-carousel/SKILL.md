@@ -64,7 +64,15 @@ Mudança relevante nesta pasta → `git commit` com mensagem descritiva. Sem tok
 
 ## Pipeline — infográfico
 
-Executar `references/infografico-visual.md`, seção **Chat**. Não reescrever a receita aqui.
+<!-- ⛔ TRAVA (15/08/2026): NÃO reescrever a receita aqui. A receita de
+     infográfico vive SÓ em references/infografico-visual.md (seção Chat p/
+     o chat; seção Cron p/ o cron). Reembutir estrutura/blocos/mascote/
+     prompt aqui já causou regressão. Mudou a receita? Edita o visual.md.
+     O pre-commit hook (~/.git-hooks/pre-commit) bloqueia marcadores. -->
+
+1. **RE-LER** — reler `references/infografico-visual.md` DO DISCO (não vale snapshot do início da sessão: o arquivo muda por outras sessões).
+2. **EXECUTAR** a seção **Chat** do visual.md, nesta ordem: montar `<TEMA>` → gerar (4:5) → `convert` → mostrar → **parar**.
+3. **PUBLICA** — só com "publica": `copy.json` → `package` → `upload` → `publish`.
 
 ## Pipeline — carrossel
 

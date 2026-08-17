@@ -31,7 +31,7 @@ Caption no `copy.json`: curta, 5–8 hashtags já no texto, fecho `— Í.`
 
 ## Geração
 
-1. `POST https://openrouter.ai/api/v1/chat/completions` com `model=google/gemini-3-pro-image`, `image_config.aspect_ratio="4:5"`, só texto (Prompt + `<TEMA>`). Sem `image_url`.
+1. `POST https://openrouter.ai/api/v1/chat/completions` com `model=google/gemini-3.1-flash-image` (Nano Banana 2 — 4:5 nativo, ~$0,069/call; validado 17/08: metade do preço do gemini-3-pro-image, mesmo texto PT-BR), `image_config.aspect_ratio="4:5"`, só texto (Prompt + `<TEMA>`). Sem `image_url`. Seedream-4.5 NÃO serve infográfico (ignora 4:5 → quadrado; validado 17/08 — vale só para cenas/stories 9:16/3:4).
 2. Aceito: PNG ~928×1152 (ratio 0.78–0.82). Fora disso: não rode `convert`.
 3. Retry 1 só se a chamada falhar vazia.
 4. `convert <slug> --src <png>`: fonte ~4:5 → resize exato 1080×1350. Sem crop, sem pad, sem canvas creme.

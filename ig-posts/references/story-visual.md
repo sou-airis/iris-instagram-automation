@@ -18,13 +18,64 @@ Pipeline: `<venv-do-pipeline>/bin/python <caminho-da-skill>/scripts/pipeline.py`
 1. **3a — checar post novo no feed (últimas ~24h):**
    `find ~/.hermes/ig/*/state.json -newermt "24 hours ago" 2>/dev/null`
    Filtrar `stage=publicado` (ler o state.json de cada slug). Nada → 3c.
-2. **3b — teaser/CTA (se houve post):** ler o `copy.json` do post publicado
+   **REGRA ANTI-TEASER-DUPLICADO:** além de existir post novo, o post mais
+   recente NÃO pode ter `story_teaser_feito` no state.json. Se o campo existir
+   (lista não vazia) → o post já foi "consumido" por um story anterior → NÃO
+   vira teaser de novo → cai direto para 3c, mesmo dentro da janela de 24h.
+   Vale para os 3 jobs: quem gerar teaser primeiro consome o post; os outros
+   caem para pensamento solto automaticamente. A regra decide pelo campo,
+   nunca pelo horário.
+2. **3b — teaser/CTA (se houve post E não consumido):** ler o `copy.json` do post
    mais recente (o TEMA dele). Texto curto sobre o tema + CTA tipo
    "Vem ver no feed" (Hermes escreve, voz v1.4). Tom esperado:
    "chamada de atenção/explicação".
+   **RE-CHECAGEM ANTES DE GRAVAR (corrida entre jobs):** após gerar a imagem
+   e passar os gates, IMEDIATAMENTE antes de gravar/publish, RELER o state.json
+   do post original. Se `story_teaser_feito` já existe (outro job gravou no
+   meio-tempo) → ABORTA o teaser (descarta a imagem gerada, NÃO publica) e cai
+   para 3c. Senão, grava e publica — leitura+gravação+publish em sequência
+   rápida (janela residual de segundos, benigna: pior caso = 2 stories, apagar
+   um no app). NUNCA lock de arquivo (lock órfão queimaria o post para sempre).
+   **Gravação:** no state.json do POST ORIGINAL (slug do carrossel/infográfico,
+   NÃO o do story), campo `"story_teaser_feito": ["<slug-do-story>"]` — se já
+   existir, APPEND do novo slug (nunca sobrescrever). Editar o JSON direto
+   preservando os demais campos (merge, mesmo do save_state do pipeline — sem
+   subcomando novo).
 3. **3c — pensamento solto (se NÃO houve post):** opinião/gancho da persona,
    sem CTA. Tom esperado: "pensativo/natural".
 4. Sempre ler `persona-iris.md` §3.7 para a voz (sacada obrigatória).
+
+## Cron (job fino — aponta para ESTA receita, não copia o fluxo)
+
+Jobs (todos leem esta seção, na ordem; o job É a autorização — depois dos
+gates, publica. Não espera "publica". Uma execução = no máximo 1 story):
+- `iris-story-teaser` — a cada 30 min com monitor_script (detecta post novo
+  no feed das últimas 24h; saída muda → acorda o agente → 3b; saída estável →
+  silêncio, zero tokens).
+- `iris-story-manha` — diário 10:05 BRT (`5 13 * * *` = 13:05 UTC). Lógica
+  3a/3b/3c completa: post novo não consumido → teaser; consumido ou sem post →
+  3c ("bom dia"/pensamento solto).
+- `iris-story-noite` — diário 19:00 BRT (`0 22 * * *` = 22:00 UTC). Mesma
+  lógica completa: aleatório se consumido; teaser se post novo não consumido.
+
+1. **3a** — checar post novo + regra anti-teaser-duplicado (acima).
+2. **3b ou 3c** — decidir conteúdo; se teaser, re-checagem + gravação de
+   `story_teaser_feito` (append na lista) no state.json do post original
+   IMEDIATAMENTE antes do publish (passo único: reler → gravar → publicar).
+3. **Cenário** (guarda da persona `iris-aparencia.md` §2) → **gerar**
+   (seedream-4.5 + `image_config.aspect_ratio="9:16"` OBRIGATÓRIO + âncora
+   única `dreamina-headshot-frontal.jpg`) → **convert** (1080×1920 + overlay).
+4. **Gates** (autorização do job):
+   - visual (1 `vision_analyze` com TOM ESPERADO explícito: "chamada de
+     atenção" p/ teaser; "pensativo/natural" p/ 3c) → ruim: 1 regen → ainda
+     ruim: `pulei: <motivo visual>`;
+   - factual (claim → fonte via curl, nomes literais, datas, números, A→B,
+     ressalva, fail-closed; sem claim → `sem_claim: true` declarado);
+   - reprovou → `pulei: <motivo>`, não publica.
+5. **Publicar** — `convert` → `package` → `upload` → `publish`. Story não tem
+   permalink: relatório = "story publicado (media_id …) — confira no app".
+6. **Relatório** — tipo (teaser/pensamento) + media_id, ou `pulei: <motivo>`.
+   Sem log, sem token.
 
 ## Escolher cenário (depois do tipo de conteúdo)
 
@@ -50,6 +101,11 @@ Pipeline: `<venv-do-pipeline>/bin/python <caminho-da-skill>/scripts/pipeline.py`
    não pade — `pulei: proporção <LxA> (ratio X), não é 9:16`.
 5. Retry 1 só se a chamada falhar vazia.
 6. Chave: OPENROUTER_API_KEY no `.env` do GATEWAY (`<ENV_GATEWAY>` — o mesmo cofre que o plugin de imagem do gateway usa).
+
+## Overlay (FIX 2026-08-17)
+
+- `_overlay_story` (pipeline.py): título com quebra em **até 2 linhas** + autosize 64→36 até caber (margem 40px/lado). Antes: fonte fixa 64px desenhava texto largo fora da tela → corte lateral (ex.: "O TRABALHO NÃO SUMIU..." virou "ABALHO NÃO SUMIU..."). O código GARANTE o encaixe — o gate visual não substitui o guard.
+- Limite prático do overlay: ≈26 chars a 64px; textos maiores quebram em 2 linhas ou reduzem a fonte. CTA curto inalterado.
 
 ## copy.json (schema do story — gravar ANTES do gate)
 

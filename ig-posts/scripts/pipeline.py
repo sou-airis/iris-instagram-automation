@@ -362,13 +362,41 @@ def _overlay_story(im, overlay: dict):
     )
     titulo = str(overlay.get("titulo", "")).upper()
     cta = str(overlay.get("cta", "Siga @sou.airis"))
+    margin = 40
+    max_w = w - 2 * margin
     if titulo and bold:
-        f = ImageFont.truetype(bold, 64)
-        bbox = draw.textbbox((0, 0), titulo, font=f)
-        tw = bbox[2] - bbox[0]
-        x, y = (w - tw) // 2, 300          # terço superior da zona segura
-        draw.rectangle([x - 30, y - 24, x + tw + 30, y + 92], fill=(20, 20, 20, 150))
-        draw.text((x, y), titulo, font=f, fill=(255, 255, 255))
+        # FIX 2026-08-17: quebra em até 2 linhas + autosize 64→36 até caber em
+        # max_w. Antes: fonte fixa 64px desenhava texto largo fora da tela
+        # (x negativo) → corte lateral ("O TRABALHO NÃO SUMIU..." → "ABALHO...").
+        size = 64
+        lines: list[str] = []
+        while size >= 36:
+            f = ImageFont.truetype(bold, size)
+            lines, cur = [], ""
+            for word in titulo.split():
+                test = (cur + " " + word).strip()
+                if draw.textlength(test, font=f) <= max_w:
+                    cur = test
+                else:
+                    if cur:
+                        lines.append(cur)
+                    cur = word
+            if cur:
+                lines.append(cur)
+            if len(lines) <= 2:
+                break
+            size -= 4
+        f = ImageFont.truetype(bold, size)
+        line_h = size + 14
+        widths = [draw.textlength(ln, font=f) for ln in lines]
+        block_w = max(widths)
+        total_h = len(lines) * line_h
+        x0 = (w - block_w) // 2
+        y0 = 340 - total_h // 2
+        draw.rectangle([x0 - 30, y0 - 24, x0 + block_w + 30, y0 + total_h + 30], fill=(20, 20, 20, 150))
+        for i, ln in enumerate(lines):
+            lx = (w - widths[i]) // 2
+            draw.text((lx, y0 + i * line_h), ln, font=f, fill=(255, 255, 255))
     if cta and bold:
         f2 = ImageFont.truetype(bold, 44)
         bbox = draw.textbbox((0, 0), cta, font=f2)

@@ -263,8 +263,75 @@ def _attempt_single(user_id: str, token: str, url: str, alt_text: str, caption: 
     return (False, True, permalink, "")
 
 
+def _attempt_story(user_id: str, token: str, url: str, caption: str) -> tuple[bool, bool, str | None, str | None, str]:
+    """Story de imagem: container STORIES → poll → publish. SEM permalink.
+
+    Sucesso = publish 200 + id. Retorna (retryable, ok, media_id, url, erro).
+    url é sempre None (story não tem permalink público; expira em 24h).
+    """
+    # 1. quota
+    qs = urllib.parse.urlencode({"access_token": token})
+    status, parsed = _request("GET", f"{HOST}/{user_id}/content_publishing_limit?{qs}", token)
+    if status != 200:
+        err = f"content_publishing_limit: HTTP {status} {_err_text(parsed, 'sem corpo')}"
+        return (_is_retryable(status, parsed), False, None, None, err)
+    try:
+        item = (parsed.get("data") or [{}])[0]
+        used = int(item.get("quota_usage") or 0)
+        total = int(item.get("config", {}).get("quota_total") or 0)
+        if total and used >= total:
+            return (False, False, None, None, f"quota estourada: {used}/{total} hoje")
+    except (TypeError, ValueError, KeyError, IndexError):
+        pass
+
+    # 2. URL da imagem
+    ok, why = _check_url(url)
+    if not ok:
+        return (False, False, None, None, why)
+
+    # 3. container story (media_type=STORIES)
+    data = {"image_url": url, "media_type": "STORIES", "access_token": token}
+    status, parsed = _request("POST", f"{HOST}/{user_id}/media", token, data)
+    if status != 200 or "id" not in parsed:
+        err = f"media story: HTTP {status} {_err_text(parsed, 'sem id')}"
+        return (_is_retryable(status, parsed), False, None, None, err)
+    creation_id = str(parsed["id"])
+
+    # 4. poll status_code
+    for i in range(POLL_MAX):
+        qs = urllib.parse.urlencode({"fields": "status_code", "access_token": token})
+        status, parsed = _request("GET", f"{HOST}/{creation_id}?{qs}", token)
+        if status != 200:
+            err = f"poll: HTTP {status} {_err_text(parsed, 'sem corpo')}"
+            return (_is_retryable(status, parsed), False, None, None, err)
+        sc = parsed.get("status_code")
+        if sc == "FINISHED":
+            break
+        if sc in ("ERROR", "EXPIRED"):
+            return (False, False, None, None, f"container {creation_id} status_code={sc}")
+        if i < POLL_MAX - 1:
+            time.sleep(POLL_BACKOFF[min(i, len(POLL_BACKOFF) - 1)])
+    else:
+        return (False, False, None, None, f"poll esgotado ({POLL_MAX}x) sem FINISHED")
+
+    # 5. publish — sucesso = id; SEM GET permalink
+    status, parsed = _request(
+        "POST",
+        f"{HOST}/{user_id}/media_publish",
+        token,
+        {"creation_id": creation_id, "access_token": token},
+    )
+    if status != 200 or "id" not in parsed:
+        err = f"media_publish: HTTP {status} {_err_text(parsed, 'sem id')}"
+        return (_is_retryable(status, parsed), False, None, None, err)
+    media_id = str(parsed["id"])
+
+    # 6. sem permalink — contrato media_id
+    return (False, True, media_id, None, "")
+
+
 def publish(package: dict, env: dict) -> dict:
-    """Publica carrossel ou imagem única (campo formato). Retorna {"ok": bool, "url": str|None, "error": str|None}."""
+    """Publica carrossel, imagem única ou story (campo formato). Retorna {"ok": bool, "url": str|None, "error": str|None}."""
     token = env.get("IG_ACCESS_TOKEN", "")
     user_id = env.get("IG_USER_ID", "")
     if not token or not user_id:
@@ -285,6 +352,20 @@ def publish(package: dict, env: dict) -> dict:
             retryable, ok, url, err = _attempt_single(user_id, token, urls[0], alt, caption)
             if ok:
                 return {"ok": True, "url": url, "error": None}
+            last = err
+            if not retryable or attempt == MAX_ATTEMPTS:
+                break
+            time.sleep(3 * attempt)
+        return {"ok": False, "url": None, "error": last}
+
+    if formato == "story":
+        if len(urls) != 1:
+            return {"ok": False, "url": None, "error": f"story exige 1 url, recebeu {len(urls)}"}
+        last = "erro desconhecido"
+        for attempt in range(1, MAX_ATTEMPTS + 1):
+            retryable, ok, media_id, url, err = _attempt_story(user_id, token, urls[0], caption)
+            if ok:
+                return {"ok": True, "url": None, "media_id": media_id, "error": None}
             last = err
             if not retryable or attempt == MAX_ATTEMPTS:
                 break

@@ -35,7 +35,12 @@ def resolve_render_tokens(t: str) -> str:
     return (t.replace("{{FONTS_DIR}}", FONTS_DIR.as_uri())
              .replace("{{ASSETS_DIR}}", (SKILL_DIR / "assets").as_uri()))
 
-W, H = 1080, 1350
+W, H = 1080, 1350  # carrossel/infográfico (mantido p/ compat)
+
+
+def _dims(formato: str) -> tuple[int, int]:
+    """Dimensões por formato: story = 1080x1920 (9:16); demais = 1080x1350."""
+    return (1080, 1920) if formato == "story" else (W, H)
 JPEG_Q = 90
 
 
@@ -104,8 +109,9 @@ def ensure_not_published(slug: str) -> None:
         err(f"slug '{slug}' já publicado (permalink: {st.get('permalink')}) — recuso republicar")
 
 
-def validate_jpeg(path: Path) -> tuple[bool, str]:
-    """Exige exatamente 1080x1350 e JPEG. Retorna (ok, motivo)."""
+def validate_jpeg(path: Path, dims: tuple[int, int] = (W, H)) -> tuple[bool, str]:
+    """Exige JPEG nas dimensões exatas de `dims` (default: carrossel/infográfico). Retorna (ok, motivo)."""
+    w, h = dims
     if not path.exists():
         return False, "arquivo não existe"
     try:
@@ -116,8 +122,8 @@ def validate_jpeg(path: Path) -> tuple[bool, str]:
         return False, f"não é imagem válida: {e}"
     if fmt != "JPEG":
         return False, f"formato {fmt} — deve ser JPEG (API da Meta rejeita PNG)"
-    if size != (W, H):
-        return False, f"dimensões {size[0]}x{size[1]} — deve ser exatamente {W}x{H}"
+    if size != (w, h):
+        return False, f"dimensões {size[0]}x{size[1]} — deve ser exatamente {w}x{h}"
     return True, "ok"
 
 
@@ -162,8 +168,9 @@ def _fit_to(im, w: int, h: int):
     """
     sw, sh = im.size
     ratio = sw / sh
-    target = w / h  # 0.8
-    if 0.78 <= ratio <= 0.82:
+    target = w / h  # 0.8 (4:5) ou 0.5625 (9:16)
+    lo, hi = (0.54, 0.58) if target < 0.7 else (0.78, 0.82)
+    if lo <= ratio <= hi:
         # Stretch exato. 928×1152 (0.806) → 1080×1350 (0.800) = 0,7% — invisível.
         # NUNCA canvas+paste: isso recria a barra creme.
         return im.resize((w, h), _resample()), "resize"
@@ -262,10 +269,11 @@ def cmd_package(args) -> None:
     files = sorted(out.glob("*.jpg"))
     if not files:
         err("nenhum .jpg — rode render antes")
-    if formato == "infografico" and len(files) != 1:
-        err(f"infografico exige exatamente 1 .jpg — achou {len(files)}")
+    if formato in ("infografico", "story") and len(files) != 1:
+        err(f"{formato} exige exatamente 1 .jpg — achou {len(files)}")
+    w, h = _dims(formato)
     for f in files:
-        ok, why = validate_jpeg(f)
+        ok, why = validate_jpeg(f, (w, h))
         if not ok:
             err(f"{f.name}: {why}")
     package = {
@@ -313,11 +321,15 @@ def cmd_publish(args) -> None:
     if not res.get("ok"):
         err(f"publish falhou: {res.get('error')}")
     permalink = res.get("url")
-    if not permalink:
+    if not permalink and package.get("formato") != "story":
         err("publish retornou ok sem permalink — tratado como falha")
-    save_state(args.slug, stage="publicado", permalink=permalink,
-               published_at=time.strftime("%Y-%m-%dT%H:%M:%S"))
-    log(f"publicado: {permalink}")
+    st = {"stage": "publicado", "published_at": time.strftime("%Y-%m-%dT%H:%M:%S")}
+    if permalink:
+        st["permalink"] = permalink
+    if res.get("media_id"):
+        st["media_id"] = res["media_id"]
+    save_state(args.slug, **st)
+    log(f"publicado: {permalink or ('media_id ' + str(res.get('media_id')) if res.get('media_id') else 'sem id')}")
 
 
 def cmd_status(args) -> None:
@@ -331,24 +343,72 @@ def cmd_validate(args) -> None:
     sys.exit(0 if ok else 1)
 
 
+def _overlay_story(im, overlay: dict):
+    """Desenha título + CTA na zona segura de um story 1080×1920.
+
+    Zona segura: central (margem ~250px topo/rodapé — UI do Instagram cobre).
+    Scrim: faixa escura semi-transparente atrás do texto (legibilidade sobre
+    foto clara). Fonte: Noto Sans Bold de ~/.fonts (fallback DejaVuSans-Bold).
+    """
+    from PIL import ImageDraw, ImageFont
+    w, h = im.size
+    draw = ImageDraw.Draw(im, "RGBA")
+    # fontes: tenta o home do gateway (real) e o do processo; senão fallback DejaVu
+    font_dir = Path.home() / ".fonts"
+    if not font_dir.exists():
+        font_dir = Path("/var/lib/hermes-gateway/home/.fonts")
+    bold = next(
+        (str(font_dir / n) for n in ("NotoSans-Bold.ttf", "NotoSans-VF.ttf", "DejaVuSans-Bold.ttf")
+         if (font_dir / n).exists()),
+        None,
+    )
+    titulo = str(overlay.get("titulo", "")).upper()
+    cta = str(overlay.get("cta", "Siga @sou.airis"))
+    if titulo and bold:
+        f = ImageFont.truetype(bold, 64)
+        bbox = draw.textbbox((0, 0), titulo, font=f)
+        tw = bbox[2] - bbox[0]
+        x, y = (w - tw) // 2, 300          # terço superior da zona segura
+        draw.rectangle([x - 30, y - 24, x + tw + 30, y + 92], fill=(20, 20, 20, 150))
+        draw.text((x, y), titulo, font=f, fill=(255, 255, 255))
+    if cta and bold:
+        f2 = ImageFont.truetype(bold, 44)
+        bbox = draw.textbbox((0, 0), cta, font=f2)
+        tw = bbox[2] - bbox[0]
+        x, y = (w - tw) // 2, h - 250 - 96   # acima da margem de rodapé
+        draw.rectangle([x - 24, y - 18, x + tw + 24, y + 72], fill=(20, 20, 20, 150))
+        draw.text((x, y), cta, font=f2, fill=(255, 255, 255))
+    return im.convert("RGB")
+
+
 def cmd_convert(args) -> None:
-    """Converte uma imagem (ex.: saída do image_generate) para 01.jpg 1080×1350 JPEG."""
+    """Converte imagem para 01.jpg nas dimensões do formato (story: 1080×1920 + overlay)."""
     ensure_not_published(args.slug)
+    copy = load_json(slug_dir(args.slug) / "copy.json")
+    formato = copy.get("formato") or "carrossel"
+    w, h = _dims(formato)
     src = Path(args.src)
     if not src.exists():
         err(f"imagem fonte não existe: {src}")
     from PIL import Image
     with Image.open(src) as im:
         rgb = im.convert("RGB")
+    sw, sh = rgb.size
+    ratio = sw / sh
+    lo, hi = (0.54, 0.58) if formato == "story" else (0.78, 0.82)
+    if not (lo <= ratio <= hi):
+        err(f"proporção {sw}x{sh} (ratio {ratio:.3f}) — não é {'9:16' if formato == 'story' else '4:5'}; não converte (sem crop/pad)")
     out = slug_dir(args.slug)
     out.mkdir(parents=True, exist_ok=True)
     dest = out / "01.jpg"
-    fitted, mode = _fit_to(rgb, W, H)
+    fitted, mode = _fit_to(rgb, w, h)
+    if formato == "story":
+        fitted = _overlay_story(fitted, copy.get("overlay") or {})
     fitted.save(dest, "JPEG", quality=JPEG_Q)
-    ok, why = validate_jpeg(dest)
+    ok, why = validate_jpeg(dest, (w, h))
     if not ok:
         err(f"convert falhou: {why}")
-    log(f"convert OK: {src} -> {dest} (1080x1350 JPEG, {mode}, quality {JPEG_Q})")
+    log(f"convert OK: {src} -> {dest} ({w}x{h} JPEG, {mode}, quality {JPEG_Q})")
 
 
 # ---------- main ----------

@@ -18,6 +18,7 @@ Gatilho típico: "saiu X no Claude, faz carrossel" + (opcional) fonte + ângulo.
 
 - Pedido de "carrossel" / post para Instagram (Telegram, Desktop ou Dashboard) → pipeline de carrossel.
 - Pedido de "infográfico" / "post de imagem única" para Instagram → executar `references/infografico-visual.md` (seção **Chat**). Não é o carrossel.
+- Pedido de "story" / "stories" para Instagram → executar `references/story-visual.md` (seção **Chat**). Não é o carrossel nem o infográfico.
 - Publicação SEMPRE via Graph API — nunca navegador logado (regra permanente).
 - NÃO publicar sem "publica" do usuário. Carrossel: sem fonte primária → não escreve. Infográfico: não bloquear por pesquisa.
 

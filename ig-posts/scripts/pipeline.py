@@ -353,10 +353,8 @@ def _overlay_story(im, overlay: dict):
     from PIL import ImageDraw, ImageFont
     w, h = im.size
     draw = ImageDraw.Draw(im, "RGBA")
-    # fontes: tenta o home do gateway (real) e o do processo; senão fallback DejaVu
+    # fontes do overlay: ~/.fonts do usuário do gateway (Path.home() resolve em produção)
     font_dir = Path.home() / ".fonts"
-    if not font_dir.exists():
-        font_dir = Path("/var/lib/hermes-gateway/home/.fonts")
     bold = next(
         (str(font_dir / n) for n in ("NotoSans-Bold.ttf", "NotoSans-VF.ttf", "DejaVuSans-Bold.ttf")
          if (font_dir / n).exists()),

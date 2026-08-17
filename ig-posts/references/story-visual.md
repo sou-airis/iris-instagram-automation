@@ -49,7 +49,7 @@ Pipeline: `<venv-do-pipeline>/bin/python <caminho-da-skill>/scripts/pipeline.py`
 4. Aceito: PNG/JPEG ~9:16 (ratio 0.54–0.58). Fora → NÃO converte, não cobre,
    não pade — `pulei: proporção <LxA> (ratio X), não é 9:16`.
 5. Retry 1 só se a chamada falhar vazia.
-6. Chave: OPENROUTER_API_KEY no `.env` do GATEWAY (`/var/lib/hermes-gateway/.env`).
+6. Chave: OPENROUTER_API_KEY no `.env` do GATEWAY (`<ENV_GATEWAY>` — o mesmo cofre que o plugin de imagem do gateway usa).
 
 ## copy.json (schema do story — gravar ANTES do gate)
 

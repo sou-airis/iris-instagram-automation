@@ -10,12 +10,18 @@ Pipeline: `<venv-do-pipeline>/bin/python <caminho-da-skill>/scripts/pipeline.py`
 
 ```
 Infográfico editorial sobre: <TEMA>
-Estilo: ilustração cartoon 2.5D, fundo papel creme, paleta sóbria e quente, traço limpo.
+Estilo: risografia e serigrafia, impressão chapada com 3 cores (laranja terroso, azul cobalto,
+amarelo ocre) sobre papel creme, granulação e textura de impressão visíveis, leve desalinhamento
+de registro, formas geométricas simples e ícones em flat ilustrado (robô, gráfico de barras,
+checklist, cérebro) em camadas chapadas. Tipografia bold limpa em preto, título com contorno
+de serigrafia. Composição editorial organizada em grade. (Estilo validado 18/08 — escolha do
+usuário sobre o mockup "nova".)
 Canvas cheio. Título e blocos usam a largura da página.
 Título no topo; blocos em sequência: o que é / o que mudou / por que importa / fecho.
 Poucas palavras por bloco. Blocos grandes, texto respirando.
 A ilustração NÃO deve conter texto — apenas os 4 blocos e o rodapé; sem etiquetas, balões ou legendas decorativas (FIX 18/08: gemini-3.1-flash-image inseria etiquetas com PT-BR errado em temas de preço).
 Linguagem simples e concatenada, uma ideia por bloco, história que começa do zero.
+Texto dos blocos sempre limpo e perfeitamente legível, sem erros.
 No rodapé, em faixa creme: "IA explicada de forma simples. Siga @sou.airis"
 ```
 
@@ -32,7 +38,7 @@ Caption no `copy.json`: curta, 5–8 hashtags já no texto, fecho `— Í.`
 
 ## Geração
 
-1. `POST https://openrouter.ai/api/v1/chat/completions` com `model=google/gemini-3.1-flash-image` (Nano Banana 2 — 4:5 nativo, ~$0,069/call; validado 17/08: metade do preço do gemini-3-pro-image, mesmo texto PT-BR), `image_config.aspect_ratio="4:5"`, só texto (Prompt + `<TEMA>`). Sem `image_url`. Seedream-4.5 NÃO serve infográfico (ignora 4:5 → quadrado; validado 17/08 — vale só para cenas/stories 9:16/3:4).
+1. `POST https://openrouter.ai/api/v1/chat/completions` com `model=google/gemini-3-pro-image` (4:5 nativo 928×1152, ~$0,136/call, texto PT-BR provado; **RETORNO 18/08:** nano banana 2 = `gemini-3.1-flash-image` falhou texto em tema numérico 0/6 — não voltar sem novo teste), `image_config.aspect_ratio="4:5"`, só texto (Prompt + `<TEMA>`). Sem `image_url`. Seedream-4.5 NÃO serve infográfico (ignora 4:5 → quadrado; validado 17/08 — vale só para cenas/stories 9:16/3:4).
 2. Aceito: PNG ~928×1152 (ratio 0.78–0.82). Fora disso: não rode `convert`.
 3. Retry 1 só se a chamada falhar vazia.
 4. `convert <slug> --src <png>`: fonte ~4:5 → resize exato 1080×1350. Sem crop, sem pad, sem canvas creme.

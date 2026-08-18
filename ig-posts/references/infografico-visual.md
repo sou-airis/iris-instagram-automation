@@ -14,6 +14,7 @@ Estilo: ilustração cartoon 2.5D, fundo papel creme, paleta sóbria e quente, t
 Canvas cheio. Título e blocos usam a largura da página.
 Título no topo; blocos em sequência: o que é / o que mudou / por que importa / fecho.
 Poucas palavras por bloco. Blocos grandes, texto respirando.
+A ilustração NÃO deve conter texto — apenas os 4 blocos e o rodapé; sem etiquetas, balões ou legendas decorativas (FIX 18/08: gemini-3.1-flash-image inseria etiquetas com PT-BR errado em temas de preço).
 Linguagem simples e concatenada, uma ideia por bloco, história que começa do zero.
 No rodapé, em faixa creme: "IA explicada de forma simples. Siga @sou.airis"
 ```

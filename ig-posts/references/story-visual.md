@@ -86,6 +86,16 @@ gates, publica. Não espera "publica". Uma execução = no máximo 1 story):
   romance/sofrimento. Só ofício e contexto.
 - Prompt de cena: "A mesma mulher da foto de referência. Íris <ação> em
   <local>, <emoção>, luz natural, still fotorrealista." SEM texto no prompt.
+- **Tail anti-cara-de-IA (OBRIGATÓRIO, colar no fim do prompt; blocos
+  completos e mapeamento na ficha `~/iris/iris-aparencia.md` §7):** "Cabelo
+  com fios individuais, frizz leve, baby hairs na testa, volume natural com
+  movimento, luz refletindo entre os fios, sem cabelo de plástico. Pele com
+  textura real e poros visíveis, penugem fina no rosto, brilho natural na
+  zona T, maquiagem levemente marcada, sem airbrush, sem pele de boneca.
+  Enquadramento levemente imperfeito, expressão relaxada, luz ambiente
+  natural."
+- Alavanca final (só se o resultado ainda tiver cara de IA): adicionar
+  "processamento de foto de celular" ao tail (ficha §7 nota técnica).
 
 ## Geração (seedream-4.5)
 

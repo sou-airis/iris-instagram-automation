@@ -344,11 +344,14 @@ def cmd_validate(args) -> None:
 
 
 def _overlay_story(im, overlay: dict):
-    """Desenha título + CTA na zona segura de um story 1080×1920.
+    """Desenha título + corpo + CTA na zona segura de um story 1080×1920.
 
     Zona segura: central (margem ~250px topo/rodapé — UI do Instagram cobre).
     Scrim: faixa escura semi-transparente atrás do texto (legibilidade sobre
     foto clara). Fonte: Noto Sans Bold de ~/.fonts (fallback DejaVuSans-Bold).
+    Título: autosize 64→36, máx 2 linhas. Corpo (opcional, regra 2 camadas
+    2026-08-18): autosize 34→24, máx 3 linhas, no MESMO bloco de scrim abaixo
+    do título.
     """
     from PIL import ImageDraw, ImageFont
     w, h = im.size
@@ -361,42 +364,77 @@ def _overlay_story(im, overlay: dict):
         None,
     )
     titulo = str(overlay.get("titulo", "")).upper()
+    corpo = str(overlay.get("corpo", "")).strip()
     cta = str(overlay.get("cta", "Siga @sou.airis"))
     margin = 40
     max_w = w - 2 * margin
+
+    def _wrap(text: str, font) -> list[str]:
+        lines, cur = [], ""
+        for word in text.split():
+            test = (cur + " " + word).strip()
+            if draw.textlength(test, font=font) <= max_w:
+                cur = test
+            else:
+                if cur:
+                    lines.append(cur)
+                cur = word
+        if cur:
+            lines.append(cur)
+        return lines
+
+    t_lines: list[str] = []
+    t_size = 64
     if titulo and bold:
         # FIX 2026-08-17: quebra em até 2 linhas + autosize 64→36 até caber em
         # max_w. Antes: fonte fixa 64px desenhava texto largo fora da tela
         # (x negativo) → corte lateral ("O TRABALHO NÃO SUMIU..." → "ABALHO...").
-        size = 64
-        lines: list[str] = []
-        while size >= 36:
-            f = ImageFont.truetype(bold, size)
-            lines, cur = [], ""
-            for word in titulo.split():
-                test = (cur + " " + word).strip()
-                if draw.textlength(test, font=f) <= max_w:
-                    cur = test
-                else:
-                    if cur:
-                        lines.append(cur)
-                    cur = word
-            if cur:
-                lines.append(cur)
-            if len(lines) <= 2:
+        while t_size >= 36:
+            f = ImageFont.truetype(bold, t_size)
+            t_lines = _wrap(titulo, f)
+            if len(t_lines) <= 2:
                 break
-            size -= 4
-        f = ImageFont.truetype(bold, size)
-        line_h = size + 14
-        widths = [draw.textlength(ln, font=f) for ln in lines]
-        block_w = max(widths)
-        total_h = len(lines) * line_h
+            t_size -= 4
+        f = ImageFont.truetype(bold, t_size)
+    else:
+        f = None
+
+    c_lines: list[str] = []
+    c_size = 34
+    fc = None
+    if corpo and bold:
+        # Regra das 2 camadas (2026-08-18): corpo em 1ª pessoa logo abaixo do
+        # título, autosize 34→24, máx 3 linhas, mesmo bloco de scrim.
+        while c_size >= 24:
+            fc = ImageFont.truetype(bold, c_size)
+            c_lines = _wrap(corpo, fc)
+            if len(c_lines) <= 3:
+                break
+            c_size -= 2
+        fc = ImageFont.truetype(bold, c_size)
+
+    if (t_lines or c_lines) and bold:
+        t_line_h = t_size + 14
+        c_line_h = c_size + 10
+        t_w = [draw.textlength(ln, font=f) for ln in t_lines]
+        c_w = [draw.textlength(ln, font=fc) for ln in c_lines]
+        gap = 18 if (t_lines and c_lines) else 0
+        t_h = len(t_lines) * t_line_h
+        c_h = len(c_lines) * c_line_h
+        block_w = max((t_w or [0]) + (c_w or [0]))
+        total_h = t_h + gap + c_h
         x0 = (w - block_w) // 2
         y0 = 340 - total_h // 2
-        draw.rectangle([x0 - 30, y0 - 24, x0 + block_w + 30, y0 + total_h + 30], fill=(20, 20, 20, 150))
-        for i, ln in enumerate(lines):
-            lx = (w - widths[i]) // 2
-            draw.text((lx, y0 + i * line_h), ln, font=f, fill=(255, 255, 255))
+        pad = 26
+        draw.rectangle([x0 - pad, y0 - 20, x0 + block_w + pad, y0 + total_h + 26], fill=(20, 20, 20, 150))
+        ty = y0
+        for i, ln in enumerate(t_lines):
+            lx = (w - t_w[i]) // 2
+            draw.text((lx, ty + i * t_line_h), ln, font=f, fill=(255, 255, 255))
+        cy = y0 + t_h + gap
+        for i, ln in enumerate(c_lines):
+            lx = (w - c_w[i]) // 2
+            draw.text((lx, cy + i * c_line_h), ln, font=fc, fill=(240, 240, 240))
     if cta and bold:
         f2 = ImageFont.truetype(bold, 44)
         bbox = draw.textbbox((0, 0), cta, font=f2)

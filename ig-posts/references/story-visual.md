@@ -29,6 +29,9 @@ Pipeline: `<venv-do-pipeline>/bin/python <caminho-da-skill>/scripts/pipeline.py`
    mais recente (o TEMA dele). Texto curto sobre o tema + CTA tipo
    "Vem ver no feed" (Hermes escreve, voz v1.4). Tom esperado:
    "chamada de atenção/explicação".
+   **2 camadas de texto (regra 2026-08-18):** hook (≤40 chars) + corpo em
+   1ª pessoa (~95 chars) que dá contexto do post SEM entregar tudo. Ex.:
+   hook "REFIZ O PROMPT" + corpo "O post de hoje conta a receita da pele."
    **RE-CHECAGEM ANTES DE GRAVAR (corrida entre jobs):** após gerar a imagem
    e passar os gates, IMEDIATAMENTE antes de gravar/publish, RELER o state.json
    do post original. Se `story_teaser_feito` já existe (outro job gravou no
@@ -43,6 +46,10 @@ Pipeline: `<venv-do-pipeline>/bin/python <caminho-da-skill>/scripts/pipeline.py`
    subcomando novo).
 3. **3c — pensamento solto (se NÃO houve post):** opinião/gancho da persona,
    sem CTA. Tom esperado: "pensativo/natural".
+   **2 camadas de texto (regra 2026-08-18):** hook (≤40 chars) + corpo em
+   1ª pessoa (micro-momento + sacada — o que ela está fazendo e por quê).
+   Ex.: hook "A IA SE ENTREGA NA PELE" + corpo "Hoje mudamos o prompt pra
+   minhas fotos ficarem mais realistas. Adeus, pele de boneca."
 4. Sempre ler `persona-iris.md` §3.7 para a voz (sacada obrigatória).
 
 ## Cron (job fino — aponta para ESTA receita, não copia o fluxo)
@@ -116,14 +123,17 @@ gates, publica. Não espera "publica". Uma execução = no máximo 1 story):
 
 - `_overlay_story` (pipeline.py): título com quebra em **até 2 linhas** + autosize 64→36 até caber (margem 40px/lado). Antes: fonte fixa 64px desenhava texto largo fora da tela → corte lateral (ex.: "O TRABALHO NÃO SUMIU..." virou "ABALHO NÃO SUMIU..."). O código GARANTE o encaixe — o gate visual não substitui o guard.
 - Limite prático do overlay: ≈26 chars a 64px; textos maiores quebram em 2 linhas ou reduzem a fonte. CTA curto inalterado.
+- **Corpo (regra 2 camadas, 2026-08-18):** campo `corpo` no overlay — autosize 34→24, máx 3 linhas, no MESMO bloco de scrim do título (gap 18). Limite prático: ~95 chars a 34px. Sem `corpo` → overlay antigo (título+CTA), defensivo.
 
 ## copy.json (schema do story — gravar ANTES do gate)
 
 ```json
 { "formato": "story",
-  "caption": "texto curto (opcional, sem hashtag obrigatória)",
+  "caption": "texto curto 1ª pessoa, alinhado ao corpo (opcional, sem hashtag obrigatória)",
   "alt_texts": ["1 frase"],
-  "overlay": { "titulo": "frase curta (≤40 chars)", "cta": "Siga @sou.airis" },
+  "overlay": { "titulo": "hook (≤40 chars)",
+               "corpo": "contexto 1ª pessoa (~95 chars, máx 3 linhas) — OBRIGATÓRIO (regra 2 camadas)",
+               "cta": "Siga @sou.airis" },
   "sem_claim": true,        // OU source: {url, date} se houver claim factual
   "source": null }
 ```
@@ -143,7 +153,7 @@ gates, publica. Não espera "publica". Uma execução = no máximo 1 story):
 1 `vision_analyze` com TOM ESPERADO explícito no prompt (R2):
 - rosto reconhecível como a Íris da âncora (mesmas feições gerais);
 - conteúdo crítico na faixa central 1080×1420 (~250px topo/rodapé livres);
-- overlay legível: título + CTA visíveis, sem corte, contraste (scrim) ok;
+- overlay legível: título + corpo + CTA visíveis, sem corte, contraste (scrim) ok;
 - TOM da cena == tom esperado (chamada de atenção / pensativo-natural);
 - sem texto escrito pela difusão no fundo (overlay é o único texto).
 Ruim → 1 regen (mesmo prompt) → ainda ruim → `pulei: <motivo visual>`.

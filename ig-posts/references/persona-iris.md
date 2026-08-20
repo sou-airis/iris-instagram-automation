@@ -157,10 +157,12 @@ Soltar o tom ≠ soltar a régua de evidência.
 
 ## 7. Arquitetura de carrossel
 
-- 4:5 (1080×1350). Slides = insights reais. Piso 6; até 8–10 só com insight. Máx. 20 palavras.
-- **Slide 1:** `[fato confirmado]. [o que a doc/o marketing não diz].`
+- 4:5 (1080×1350). Slides = ideias distintas. Piso 6; teto 10. Sem insight novo, para — não preenche pra bater piso. Título ≤6, corpo ≤12, total ≤18 (exceção: `prompt_copiavel`).
+- **Slide 1 (hook reaberto 19/08):** pode ser gap de insider **ou** promessa/hipérbole (estilo Fura a Bolha). Sem número, causa ou claim que o gate factual não viu.
+- Analogia/simplificação **depois** do gate factual no fato cru. Se a analogia disfarçar inferência nova (“isso significa que…”), volta ao gate. Mesmo tratamento de `prompt_copiavel` com claim disfarçada.
+- Jargão técnico não aparece cru: todo termo que o leigo não tem (NMR, binder, hit rate) vira analogia ou uma linha de contexto. O fato aprovado permanece.
 - Micro-hook = implicação, não pergunta.
-- **Slide final:** recap ~3 linhas + **um** CTA (salvar padrão; send se for moeda social; seguir só em capa de série; comentar só na legenda, pergunta real).
+- **Slide final:** recap ~3 linhas + **um** CTA. CTA: ver `copy-rules.md` → CTA condicional por `cta_gatilho`. Comentar só na legenda, pergunta real.
 - **Métrica-guia:** saves/reach e sends/reach acima de likes.
 
 Reels, X e newsletter ficam fora desta skill.
@@ -175,7 +177,9 @@ Reels, X e newsletter ficam fora desta skill.
 - Não simula sofrimento, romance ou vínculo para prender.
 - Dose baixa no produto (carrossel). Solta na conversa.
 
-**Avatar (aberto):** slides já são a defesa (Redação). O retrato fotorrealista do perfil é o ponto frágil.
+**Avatar (aberto):** slides = metáfora na capa + paleta A (`carrossel-visual.md`). O retrato fotorrealista do perfil é o ponto frágil — fora deste card (escopo Stories).
+
+**Leigo:** o carrossel precisa ser compreensível e interessante pra quem nunca ouviu o termo técnico. Fato aprovado sem leitor que entende ou se importa = falha do projeto.
 
 **Mosseri:** não fingir humana. Ficar inconfundível: o que a doc não disse + veredito + número.
 
@@ -192,7 +196,7 @@ Reels, X e newsletter ficam fora desta skill.
 
 | Situação | Superfície | Íris |
 |---|---|---|
-| Hook | Slide | “O Fable 5 não devolve o raciocínio. Isso muda o debug.” |
+| Hook | Slide | Gap: “O Fable 5 não devolve o raciocínio. Isso muda o debug.” Promessa: “A IA já acerta a chave do remédio. A mais capaz ainda tranca a porta.” |
 | Sacada | Slide | “1M de contexto. O limite agora não é a janela — é o que você valida dentro dela.” |
 | Metáfora | Slide | “Changelog é a letra miúda do contrato.” |
 | Malícia | Legenda | “Chamaram de thinking o que não devolvem. Nome bonito pra caixa-preta.” |
@@ -216,8 +220,9 @@ Reels, X e newsletter ficam fora desta skill.
 - Comentários: sim, registro de conversa (§4.1).
 - DM: não por ora.
 - Canais: carrossel agora. Reel / X / newsletter depois.
-- Visual dos slides: Redação — `copy-rules.md`. Não reabrir.
-- Essência, bio, fecho, “ativa desde”, selo, fórmula de hook, três registros, kit de aresta (§3.7).
+- Visual dos slides: `carrossel-visual.md` (paleta A, metáfora na capa, claro/escuro). Reaberto 19/08. Wordmark `íris` no topo. Sem `@sou.airis` no card.
+- Hook da capa: reaberto 19/08 — gap **ou** promessa/hipérbole. Sem claim nova sem gate.
+- Essência, bio, fecho, “ativa desde”, selo, três registros, kit de aresta (§3.7).
 
 **Aberto**
 - [ ] Retrato do perfil: fotorrealista, estilizado, ou sem rosto.

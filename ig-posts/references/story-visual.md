@@ -86,13 +86,31 @@ gates, publica. Não espera "publica". Uma execução = no máximo 1 story):
 
 ## Escolher cenário (depois do tipo de conteúdo)
 
-- Hermes escolhe local coerente com a Íris (home office, café, estúdio,
-  biblioteca, parque…) e com o tom do texto (3b → cena de chamar atenção/
-  explicando; 3c → cena pensativa/natural).
+- **TOM é do TEXTO, não da pose.** O tom do 3b ("chamada de atenção") vale
+  para o overlay/CTA. A pose vem do sorteio — NUNCA derivar pose de "explicando"
+  por causa do tom.
+- **Sorteio determinístico (obrigatório, não inventar pose):**
+  `python3 <scripts-do-gateway>/ig_story_cena_sorteio.py`
+  → imprime JSON com a `cena` sorteada (pose/expressão/ângulo/enquadramento/
+  cenário/look + `prompt_parte` pronta para colar) e o `teto` do dia.
+  Colar o `prompt_parte` no prompt de cena. Não escolher manualmente.
+  Saída estável por dia (sorteia 1x). Se o script falhar → `pulei: sorteio`.
+- **Teto diário (regra 2026-08-19):** máx 2 stories/dia civil BRT. Se
+  `teto.pode_publicar == false` → `pulei: teto diário atingido (2 stories)`,
+  NÃO gera, NÃO publica. Conta stories com `stage=publicado` no dia BRT.
+- **Ficha de cena no state.json DO STORY (após o publish; também se `pulei`
+  depois de gerar):** gravar o que FOI usado, para o próximo story consultar:
+  ```json
+  "cena": { "pose": "...", "expressao": "...", "angulo": "...",
+            "enquadramento": "...", "cenario": "...", "look": N }
+  ```
+  O script lê o último story publicado e exclui pose/enquadramento repetidos
+  e `explicando` em sequência.
 - GUARDA (iris-aparencia.md §2): proibido cama/pijama/academia/banho/festa/
   romance/sofrimento. Só ofício e contexto.
-- Prompt de cena: "A mesma mulher da foto de referência. Íris <ação> em
-  <local>, <emoção>, luz natural, still fotorrealista." SEM texto no prompt.
+- Prompt de cena: "A mesma mulher da foto de referência. Íris
+  <prompt_parte do sorteio>, luz natural, still fotorrealista."
+  SEM texto no prompt.
 - **Tail anti-cara-de-IA (OBRIGATÓRIO, colar no fim do prompt; blocos
   completos e mapeamento na ficha `~/iris/iris-aparencia.md` §7):** "Cabelo
   com fios individuais, frizz leve, baby hairs na testa, volume natural com

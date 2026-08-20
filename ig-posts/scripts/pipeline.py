@@ -446,7 +446,11 @@ def _overlay_story(im, overlay: dict):
 
 
 def cmd_convert(args) -> None:
-    """Converte imagem para 01.jpg nas dimensões do formato (story: 1080×1920 + overlay)."""
+    """Converte imagem para JPEG nas dimensões do formato.
+
+    Sem --slide: grava 01.jpg (infográfico/story).
+    Com --slide N: grava NN.jpg (carrossel). Sem crop, sem pad.
+    """
     ensure_not_published(args.slug)
     copy = load_json(slug_dir(args.slug) / "copy.json")
     formato = copy.get("formato") or "carrossel"
@@ -454,6 +458,9 @@ def cmd_convert(args) -> None:
     src = Path(args.src)
     if not src.exists():
         err(f"imagem fonte não existe: {src}")
+    slide = getattr(args, "slide", None)
+    if slide is not None and slide < 1:
+        err("--slide deve ser >= 1")
     from PIL import Image
     with Image.open(src) as im:
         rgb = im.convert("RGB")
@@ -464,7 +471,7 @@ def cmd_convert(args) -> None:
         err(f"proporção {sw}x{sh} (ratio {ratio:.3f}) — não é {'9:16' if formato == 'story' else '4:5'}; não converte (sem crop/pad)")
     out = slug_dir(args.slug)
     out.mkdir(parents=True, exist_ok=True)
-    dest = out / "01.jpg"
+    dest = out / (f"{slide:02d}.jpg" if slide is not None else "01.jpg")
     fitted, mode = _fit_to(rgb, w, h)
     if formato == "story":
         fitted = _overlay_story(fitted, copy.get("overlay") or {})
@@ -505,9 +512,10 @@ def main() -> None:
     p.add_argument("path")
     p.set_defaults(fn=cmd_validate)
 
-    p = sub.add_parser("convert", help="converte imagem para 01.jpg 1080x1350 (square=cover, 9:16=pad)")
+    p = sub.add_parser("convert", help="converte imagem para JPEG 1080x1350 (ou 1080x1920 story); --slide N grava NN.jpg")
     p.add_argument("slug")
     p.add_argument("--src", required=True, help="caminho da imagem fonte")
+    p.add_argument("--slide", type=int, default=None, help="número do slide (grava NN.jpg). Sem este flag: 01.jpg")
     p.set_defaults(fn=cmd_convert)
 
     args = ap.parse_args()

@@ -291,6 +291,11 @@ def cmd_package(args) -> None:
     ensure_not_published(args.slug)
     copy = load_json(slug_dir(args.slug) / "copy.json")
     formato = copy.get("formato") or "carrossel"
+    if formato == "carrossel":
+        # schema mínimo (fail-closed antes de subir R2)
+        for campo in ("selo", "selo_porque", "cta_gatilho", "gancho_tipo", "fato_ouro"):
+            if not copy.get(campo):
+                err(f"copy.json sem '{campo}' — obrigatório desde 2026-08-20 (autonomia técnica)")
     out = slug_dir(args.slug)
     files = sorted(out.glob("*.jpg"))
     if not files:

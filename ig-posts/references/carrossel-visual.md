@@ -11,6 +11,29 @@ Copy/voz: `references/persona-iris.md` + `references/copy-rules.md`.
 Esta ficha não reescreve selo nem fecho da persona. Arco, CTA e
 gancho: `copy-rules.md`.
 
+## Catálogo de layouts (direção positiva — 2026-08-20)
+
+Escolher **um layout por slide**, declarado em `copy.json` (`slides[].layout`).
+Nunca o mesmo layout em dois slides seguidos. Capa = L1.
+
+| Layout | O que é | Quando | Derivado de |
+|---|---|---|---|
+| **L1_CAPA_FULLBLEED** | Foto do MUNDO ocupando o quadro todo; texto no terço de baixo, tinta sobre vinheta | capa | Fura 01 |
+| **L2_CARD_OVER_PAPER** | Papel #F2EDE4; card branco central com sombra leve; texto dentro do card; MUNDO pequeno atrás/fora | miolo explicativo | Fura 07 |
+| **L3_TABELA_2COL** | Duas colunas numeradas; números grandes #E23D28; sem ícone, sem borda desenhada | miolo de comparação | Fura 05 |
+| **L4_TIPOGRAFIA_PROTA** | Tipografia ≥70% do quadro; MUNDO só como textura de fundo (≤10%) | miolo de prova/curto | Fura 12 (sem pessoa) |
+| **L5_FOTO_MAIS_TEXTO** | MUNDO em metade do quadro (foto), texto na outra metade sobre papel | miolo com imagem forte | Fura 12 |
+
+O MUNDO (objeto/luz de `capa_metafora`) atravessa todos os layouts,
+mudando de papel: protagonista na capa, coadjuvante no miolo.
+
+Wordmark e numeração: **condicionais ao layout** (L4 pode omitir os dois;
+L1 mantém). Sem wordmark/número quando o layout não pedir — o Instagram
+já numera o carrossel.
+
+**Regra de contexto:** todo slide com número leva o *quê* na mesma frase
+ou no slide. Número órfão reprova (copy-rules).
+
 ## Prompt
 
 Três linhas por slide, nesta ordem: (1) MUNDO do post
@@ -199,7 +222,8 @@ Checagem em dois tempos:
 
 ## Chat
 
-1. Fonte primária. Ingestão local (`curl`; HTML→texto; PDF→pdftotext).
+1. Fonte primária. Ingestão local (`curl`; HTML→texto; PDF→PyMuPDF `pymupdf`
+   do venv do pipeline — `pdftotext` NÃO é requisito).
    Sem texto útil → ata `REPROVADO_INGESTAO` e não escreve.
    `web_search`/`web_extract` quebrados nesta instalação.
    `r.jina.ai` não é evidência do gate.
@@ -267,4 +291,4 @@ Apagar objetos R2 desta peça + remover o slug. Não confundir com A.
   visual lê a imagem contra o copy.json.
 - Story, cron, reply, pack, HTML como caminho padrão.
 - Foto da Íris no card (escopo Stories).
-- Instalar pdftotext / consertar web_search.
+- Instalar pdftotext: NÃO é requisito — usar `pymupdf` do venv do pipeline (validado 2026-08-20, PDF de 21 páginas extraído OK). Consertar web_search: aberto.

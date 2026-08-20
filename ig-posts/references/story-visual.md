@@ -110,6 +110,13 @@ gates, publica. Não espera "publica". Uma execução = no máximo 1 story):
   → segue só com o prompt_parte (catálogo é enriquecimento, não trava).
   Após o publish, gravar `inspiracao_id` na ficha `cena` do state.json do
   story (para o próximo sorteio excluir o mesmo arquivo).
+- **MEMÓRIA DE VARIAÇÃO (regra 2026-08-20):** o sorteio exclui cada campo
+  contra os ÚLTIMOS 3 stories publicados (não só o anterior imediato) —
+  lição do teste: com exclusão de 1 nível, o story podia repetir pose/
+  enquadramento do "anterior do anterior" (ex.: braços cruzados + cintura
+  repetiram o publicado 2 stories atrás). Agora cada campo (pose, expressão,
+  enquadramento, cenário, look) deve diferir de TODOS os últimos 3. A ficha
+  `cena` gravada em cada story alimenta essa memória.
 - **Teto diário (regra 2026-08-19):** máx 2 stories/dia civil BRT. Se
   `teto.pode_publicar == false` → `pulei: teto diário atingido (2 stories)`,
   NÃO gera, NÃO publica. Conta stories com `stage=publicado` no dia BRT.

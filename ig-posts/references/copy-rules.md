@@ -13,6 +13,7 @@ Leia e siga em TODA execução. Quando o usuário calibrar visual/copy, atualize
 5. Só então os slides do meio. `fato_ouro` tem que aparecer **até o slide 3**.
 6. `retorica`: lista `{figura, fato_ancora}`. Toda figura aponta a um fato já aprovado. Sem âncora → a figura cai. Sem cota de quantidade.
 7. `selo` + `selo_porque` (uma linha). Sem o porque → selo é decoração, reprova.
+8. **TODO slide passa no CONTEXTO e no TESTE_DO_ESTRANHO — não só a capa.** Número sem contexto no miolo = falha (ex.: “19 e 23 minutos” sem dizer do quê).
 
 ## Estrutura dos slides
 
@@ -116,7 +117,7 @@ Lista: “Só que tem um porém →” · “Agora repara:” · “E o dado que
 
 Reprovou → reescreve. Sem entregar copy que já sabe que falha.
 
-- **CONTEXTO_ANTES_DO_NUMERO** — o 01 diz o *quê* em linguagem concreta. Número pode estar na **mesma** frase. Número sozinho, sem substantivo do feito → falhou.
+- **CONTEXTO_ANTES_DO_NUMERO** — vale para **todo slide**, não só o 01: todo número tem o *quê* na mesma frase ou no slide. Número órfão (“19 e 23 minutos” sem dizer do quê) → falhou.
 - **ANALOGIA_EXPLICA** — analogia lida sozinha faz sentido.
 - **SLIDE_AUTOSSUFICIENTE** — entendível sem os outros. Pode sobrar ponta (fato do post, não clickbait).
 - **TESTE_DO_ESTRANHO** — quem nunca ouviu o assunto entende o que o post *está dizendo*.
@@ -137,6 +138,7 @@ Referente de nível e anti-exemplo: `references/banco-referencia.md`.
 - **RITMO_VARIA** — há um slide curto (≤6) e os comprimentos não são todos iguais.
 - **RETORICA_ANCORADA** — cada item de `retorica` nomeia `fato_ancora` que o gate viu. Sem âncora → corta a figura, não o post inteiro.
 - **CTA_COMPLETO** — o fecho executa a fórmula do `cta_gatilho` declarado, não só o verbo “Envia”. MOEDA_SOCIAL precisa do “pra quem ainda acha que [crença]”. UTILIDADE precisa do “pra quem usa [ferramenta] no trabalho”. Se não couber no teto, **o teto cede** — o CTA é o slide que converte. Falhou → reescreve.
+- **MINIATURA_LEGIVEL** — reduzir cada slide a ~160px de largura (tamanho de feed) e conferir que o texto ainda se lê como *texto*, não como borrão. Slide ilegível em miniatura → reprova. (Referente: thumbnail real do feed, não a imagem em tela cheia.)
 
 **Parada:** se depois de reescrever ainda não passa, para e diz **qual** critério e por quê. Não entrega.
 

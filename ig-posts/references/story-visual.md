@@ -117,8 +117,11 @@ gates, publica. Não espera "publica". Uma execução = no máximo 1 story):
   movimento, luz refletindo entre os fios, sem cabelo de plástico. Pele com
   textura real e poros visíveis, penugem fina no rosto, brilho natural na
   zona T, maquiagem levemente marcada, sem airbrush, sem pele de boneca.
-  Enquadramento levemente imperfeito, expressão relaxada, luz ambiente
-  natural."
+  Enquadramento levemente imperfeito."
+- ⛔ **NUNCA colar "expressão relaxada" nem "luz ambiente natural" no tail**
+  (regra 2026-08-19): conflitavam com a expressão sorteada e puxavam o fundo
+  pro neutro. A expressão entra UMA vez, no corpo do prompt, com peso — nunca
+  contradita no tail. Luz/ambiente pertencem à descrição do CENÁRIO sorteado.
 - Alavanca final (só se o resultado ainda tiver cara de IA): adicionar
   "processamento de foto de celular" ao tail (ficha §7 nota técnica).
 

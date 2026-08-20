@@ -95,6 +95,21 @@ gates, publica. Não espera "publica". Uma execução = no máximo 1 story):
   cenário/look + `prompt_parte` pronta para colar) e o `teto` do dia.
   Colar o `prompt_parte` no prompt de cena. Não escolher manualmente.
   Saída estável por dia (sorteia 1x). Se o script falhar → `pulei: sorteio`.
+- **EXPRESSÃO FORTE (regra 2026-08-19, validada T1-T3):** toda expressão na
+  cena deve ter 2-3 cláusulas FÍSICAS concretas — o que a BOCA faz (dentes à
+  mostra, entreaberta, selada), o que os OLHOS fazem (semicerrados, arregalados,
+  fixos), o que as SOBRANCELHAS fazem (erguidas, franzidas). NUNCA adjetivo
+  solto ("séria", "feliz", "contida") sem especificar o rosto fisicamente.
+  LIÇÃO: instrução fraca = seedream cai no default neutro ("cara de paisagem");
+  instrução forte = obedece. O `prompt_parte` do script já vem com expressão
+  forte — NÃO enfraquecer na reescrita.
+- **Inspiração do catálogo (2026-08-19):** o script sorteia 1 arquivo do
+  catálogo `prompts-foto-ia` (campo `inspiracao` no JSON) como fonte de
+  cenário/composição/luz. Usar como VOCABULÁRIO: misturar e reescrever com a
+  identidade da Íris + guarda §2 — NÃO colar literal. Se `inspiracao` ausente
+  → segue só com o prompt_parte (catálogo é enriquecimento, não trava).
+  Após o publish, gravar `inspiracao_id` na ficha `cena` do state.json do
+  story (para o próximo sorteio excluir o mesmo arquivo).
 - **Teto diário (regra 2026-08-19):** máx 2 stories/dia civil BRT. Se
   `teto.pode_publicar == false` → `pulei: teto diário atingido (2 stories)`,
   NÃO gera, NÃO publica. Conta stories com `stage=publicado` no dia BRT.

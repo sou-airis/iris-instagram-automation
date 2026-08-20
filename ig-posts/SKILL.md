@@ -29,11 +29,12 @@ skills/ig-posts/
   SKILL.md
   DECISIONS.md                 ← histórico de decisões; LER a cada execução
   references/persona-iris.md   ← voz v1.4; LER a cada execução
-  references/copy-rules.md     ← regras de copy + visual Redação (carrossel); LER a cada execução
+  references/copy-rules.md     ← regras de copy vigentes; LER a cada execução
+  references/carrossel-visual.md ← receita do carrossel (Chat); EXECUTAR, não resumir
   references/infografico-visual.md ← receita do infográfico (Chat e Cron); EXECUTAR, não resumir
   assets/infografico-referencia.png ← look do infográfico (não clonar layout/mascote)
   assets/iris-avatar.jpg       ← retrato ilustrado da Íris (rodapé, se houver)
-  templates/slide-template.html ← placeholders {{titulo}} {{corpo}} {{numero}} (carrossel)
+  templates/slide-template.html ← arquivo no disco; NÃO é o caminho padrão do carrossel
   templates/infografico-template.html ← fallback HTML (Redação); não é o padrão do infográfico
   scripts/pipeline.py          ← subcomandos: render | convert | upload | package | publish | status
   scripts/publishers/          ← ÚNICO lugar com lógica de rede
@@ -42,7 +43,8 @@ skills/ig-posts/
     __init__.py
 ```
 
-**Decisões:** ler `DECISIONS.md`, `references/persona-iris.md` e `references/copy-rules.md` em TODA execução de **carrossel**. Infográfico: executar só `references/infografico-visual.md` (seção Chat).
+**Decisões:** carrossel → executar `references/carrossel-visual.md` (Chat) e ler `copy-rules.md` + `persona-iris.md`. `DECISIONS.md` é histórico. Infográfico: só `infografico-visual.md`.
+Números de copy (teto de palavras, hook, CTA, arco) **não se escrevem neste SKILL.md** — vivem em `copy-rules.md`. Conflito: ver precedência no topo de `copy-rules.md`.
 Atualizar `DECISIONS.md` sempre que uma decisão nova for tomada (falha, contorno, regra permanente, ID de teste).
 Mudança relevante nesta pasta → `git commit` com mensagem descritiva. Sem tokens no commit.
 
@@ -77,13 +79,14 @@ Mudança relevante nesta pasta → `git commit` com mensagem descritiva. Sem tok
 
 ## Pipeline — carrossel
 
-1. **PESQUISA**: web_search + fetch da fonte primária (changelog/docs/blog oficial). Sem confirmação na fonte → para e avisa. Nunca sobre feature não verificada.
-2. **COPY**: `formato=carrossel`. Piso 6 slides, até 8–10 só com insight real, máx 20 palavras cada. Slide 1 = gap de insider; último = recap + um CTA. Slides no registro de publicação (sacada obrigatória); legenda no registro solto (fecho `Fonte no último slide. — Í.`). Legenda ≤2200 chars, 5-8 hashtags. alt_text de 1 frase por slide. Ler `references/persona-iris.md`, `references/copy-rules.md` e `DECISIONS.md`. Gravar `copy.json`.
-3. **RENDER**: `pipeline.py render <slug>`. Playwright, 1080x1350 JPEG quality 90. Checkpoint por slide.
-4. **UPLOAD**: `pipeline.py upload <slug>`. R2; curl -I → 200 + image/jpeg, sem redirect.
-5. **APROVAÇÃO**: enviar JPEGs + legenda e PARAR. Só publica após "publica".
-6. **PUBLICAÇÃO**: `pipeline.py publish <slug>` → permalink no state.json.
-7. **ESTADO**: `pipeline.py status <slug>`.
+<!-- Receita de copy/arte NÃO vive aqui. Executar references/carrossel-visual.md (Chat). -->
+
+1. **RE-LER** do disco: `carrossel-visual.md` (Chat), `copy-rules.md`, `persona-iris.md`.
+2. **EXECUTAR** a seção Chat da ficha, nesta ordem: fonte → copy.json → gate factual → autoteste → mostrar → parar. Sem ok na copy → não gera imagem.
+3. Com ok: Geração + Checkpoint + convert `--slide N` (não `render` HTML).
+4. **UPLOAD** → mostrar links R2 + legenda → **parar**.
+5. **PUBLICA** só com "publica": `package` → `upload` → `publish`.
+6. **ESTADO**: `pipeline.py status <slug>`.
 
 ## Credenciais
 

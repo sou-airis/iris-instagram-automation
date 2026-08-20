@@ -13,37 +13,47 @@ gancho: `copy-rules.md`.
 
 ## Prompt
 
-Bloco de estilo — igual em TODOS os slides da série (capa troca
-só o parágrafo da metáfora):
+Três linhas por slide, nesta ordem: (1) MUNDO do post
+(2) PAPEL da tipografia neste slide (3) TEXTO EXATO.
+Não envie `NN.jpg` de outro slide como `image_url`.
+Coerência da série = descrever o mesmo motivo em texto.
+
+Bloco comum (todos os slides):
 
 ```
-Slide de carrossel editorial.
-Papel claro #F2EDE4 ou papel escuro #0A0A0A, intercalados
-(par = escuro, ímpar depois da capa = claro). Capa = metáfora
-fotográfica + texto no terço de baixo.
-Tinta: creme no slide escuro, preto no slide claro.
-Destaque único #E23D28 no título e em até 5 palavras do corpo
-(negrito colorido). Sem filete, sem ícone, sem emoji, sem
-gradiente, sem foto de pessoa, sem mascote recorrente, sem
-@handle, sem CTA visual, sem rodapé.
+Slide de carrossel editorial, paleta A.
+Tinta: creme #F2EDE4 no slide escuro, preto #0A0A0A no claro.
+Destaque único #E23D28 no título e em até 5 palavras do corpo.
+Sem filete, sem ícone, sem emoji, sem chrome de app, sem
+@handle, sem CTA visual, sem rodapé, sem foto de pessoa,
+sem mascote. Sem degradê de startup.
 Wordmark "íris" no topo, pequeno, tracking aberto.
-Numeração grande #E23D28 só no canto superior esquerdo.
-Sem pílula 2/12.
-SAFE ZONE: texto, wordmark e elemento crítico a ≥34px de todas
-as bordas (safe 3:4 centrada no 4:5 1080×1350). Fundo (cor/imagem)
-pode sangrar até a borda. Texto nunca sangra. Sem coluna vazia.
-Texto sempre limpo, PT-BR, exatamente as palavras listadas.
+Numeração grande #E23D28 no canto superior esquerdo, inteira,
+longe da borda. Sem pílula 2/12.
+SAFE ZONE: texto e wordmark ≥34px das bordas. Fundo (cor ou
+imagem do MUNDO) pode sangrar. Texto nunca sangra.
+Texto limpo, PT-BR, exatamente as palavras listadas.
 A ilustração NÃO inventa palavra, número, nome nem frase extra.
+PROIBIDO desenhar cotas, "48px", setas de medida, labels técnicos.
 ```
 
 Capa, acrescentar:
 
 ```
-Imagem: metáfora visual forte, não-literal. As coisas listadas
-em capa_literais NÃO são o motivo central. Sem rosto humano.
-Seta de swipe só na capa: "deslize →" discreto no canto inferior
-direito, dentro da safe zone, #E23D28, corpo pequeno. Nenhum
-outro slide leva seta.
+MUNDO: metáfora fotográfica full-bleed (capa_metafora).
+As coisas em capa_literais NÃO são o motivo central.
+Tipografia no terço de baixo, cartaz.
+Seta só na capa: "deslize →" canto inferior direito, #E23D28, pequeno.
+```
+
+Miolo (02–N), acrescentar — NÃO é papel chapado vazio:
+
+```
+MUNDO: o mesmo objeto/luz da capa, crop diferente, 20–40% do
+quadro (textura, silhueta, grain). Sem gente. Sem UI.
+O resto do quadro é papel #F2EDE4 ou #0A0A0A (intercalar).
+Tipografia: um slide pode ser cartaz de 4 palavras; outro, placa
+de prova. Não repetir o mesmo layout em todos.
 ```
 
 Slide `prompt_copiavel`, acrescentar:
@@ -193,20 +203,14 @@ Checagem em dois tempos:
    Sem texto útil → ata `REPROVADO_INGESTAO` e não escreve.
    `web_search`/`web_extract` quebrados nesta instalação.
    `r.jina.ai` não é evidência do gate.
-2. Copy → `copy.json`
-   `{formato: carrossel,
-    capa_metafora, capa_literais,
-    slides:[{titulo,corpo,tipo,destaques?}],
-    caption, alt_texts, source:{url,date}}`.
-   Piso 6, teto 10. Sem ideia nova, para. Título ≤6, corpo ≤12,
-   total ≤18 palavras/slide, exceto `prompt_copiavel`.
-   Capa = gap **ou** promessa/hipérbole. Analogia só depois do factual.
-   Jargão não aparece cru.
-   **Slide 2:** o feed pode começar nele. Entrega valor sozinho,
-   microgancho próprio (não é continuação), passa SLIDE_AUTOSSUFICIENTE.
-   `copy.json` declara `arco` (noticia|metodo) e `gancho_tipo` (G1–G6).
-   `prompt_copiavel` só se a fonte for um método colável
-   (e só com a seção Tipo no disco).
+2. Copy → `copy.json` na ordem de `copy-rules.md` (fato_ouro ANTES
+   dos slides; 3 versões de capa/fecho; retorica ancorada).
+   Schema mínimo: formato, fato_ouro, gancho_tipo, arco, capa_versoes,
+   capa_escolha_porque, fecho_versoes, fecho_escolha_porque, selo,
+   selo_porque, retorica, capa_metafora, capa_literais, slides, caption,
+   alt_texts, source.
+   Contagem, teto, arco: só `copy-rules.md` — não restatar número aqui.
+   Analogia só depois do factual. Jargão não aparece cru.
 3. **Gate factual** (antes de apresentar a copy; antes de qualquer imagem).
    Confrontar **por slide** `tipo=afirmacao` + a `caption`
    contra o texto extraído. Não confrontar bytes crus.
@@ -222,7 +226,9 @@ Checagem em dois tempos:
    - ressalva central omitida/invertida → `REPROVADO_FATO`
    Não julga tom, gancho, voz, hashtags, `Fonte no último slide. — Í.`
    1 correção + re-gate; ainda ruim → parar com a ata.
-4. `APROVADO`: **autoteste de leigo** (`copy-rules.md`). Falhou → reescreve; ainda falha → parar e dizer o critério. Passou: mostrar slides + legenda + ata. **Parar.**
+4. `APROVADO`: autoteste de leigo **e** de impacto (`copy-rules.md`).
+   Falhou → reescreve; ainda falha → parar e dizer o critério.
+   Passou: mostrar slides + legenda + ata + versões descartadas. **Parar.**
    Sem ok na copy → não gera imagem.
 5. Com ok: **CAPA_NOVA_7D + METAFORA_CAPA (passo texto)**;
    se passou, gerar cada slide (Geração + Checkpoint).

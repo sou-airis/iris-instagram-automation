@@ -225,6 +225,32 @@ def cmd_render(args) -> None:
     if formato == "infografico":
         _render_infografico(args.slug, copy, out)
         return
+    if formato == "carrossel":
+        slides = copy.get("slides")
+        if not slides or not isinstance(slides, list):
+            err("copy.json sem lista 'slides'")
+        n = len(slides)
+        if not 2 <= n <= 12:
+            err(f"copy.json com {n} slides — esperado 6-8 (aceito 2-12)")
+        missing = []
+        for i in range(1, n + 1):
+            dest = out / f"{i:02d}.jpg"
+            ok, _ = validate_jpeg(dest)
+            if ok:
+                log(f"[checkpoint] slide {i} já válido — pulando")
+            else:
+                missing.append(f"{i:02d}.jpg")
+        if missing:
+            err(
+                "carrossel não usa HTML/Playwright. "
+                f"Faltando: {', '.join(missing)}. "
+                "Gere no Gemini e rode: convert <slug> --src <png> --slide N"
+            )
+        cur = load_state(args.slug).get("stage")
+        if cur not in ("aprovacao", "publicado"):
+            save_state(args.slug, stage="render", slide_count=n)
+        log(f"render OK: {n} slides em {out} (já no disco; sem Playwright)")
+        return
     slides = copy.get("slides")
     if not slides or not isinstance(slides, list):
         err("copy.json sem lista 'slides'")

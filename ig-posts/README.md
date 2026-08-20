@@ -60,7 +60,7 @@ O `infografico` é o caminho curto: 1 `image_generate` → `convert` (pad, sem c
 | `references/copy-rules.md` | Regras de texto + identidade visual (paleta, fontes, composição). |
 | `templates/slide-template.html` | O "molde" do slide (carrossel). Tem `{{titulo}}`, `{{corpo}}`, `{{numero}}`; o texto é preenchido em HTML e virado imagem pelo Playwright. |
 | `templates/infografico-template.html` | Fallback HTML do infográfico (Redação). Não é o caminho padrão. |
-| `references/infografico-visual.md` | Estilo do infográfico (papel quente + ouro + cartoon 2.5D). |
+| `references/infografico-visual.md` | Estilo do infográfico (risografia/serigrafia — 3 cores chapadas: laranja terroso, azul cobalto, amarelo ocre — sobre papel creme; validado 18/08). |
 | `assets/infografico-referencia.png` | Look de referência do infográfico — não clonar layout/mascote. |
 | `assets/iris-avatar.jpg` | Retrato ilustrado da Íris para o rodapé, se a peça tiver assinatura. |
 | `assets/bg.jpg` | Textura de fundo fixa (grão fotográfico), aplicada com opacidade baixa. |

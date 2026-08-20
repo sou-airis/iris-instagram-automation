@@ -108,6 +108,7 @@ Campo `gancho_tipo`. Não repetir o do último `stage=publicado` (REPERTORIO_VAR
 
 Máx. 1 por slide, no fim. Não em todos. Nunca no último. Variar entre posts.
 **Ponte só existe se o slide seguinte entregar o que ela promete.** Se não entregar, corta a ponte — loop aberto que troca o assunto é falha.
+**Ponte ideal é específica do post** — anuncia a *próxima peça* (“Aí veio o exame.”, “E o grid?”, “E quem não tem conta?”). Ponte de catálogo é fallback quando a peça não tem nome curto.
 
 Lista: “Só que tem um porém →” · “Agora repara:” · “E o dado que ninguém citou:” · “Mas espera.” · “Traduzindo:” · “Na prática, isso significa:” · “E a parte que assusta?” · “Ainda não é o mais importante.” · “O detalhe que muda tudo:” · “Continua →”
 
@@ -139,6 +140,9 @@ Referente de nível e anti-exemplo: `references/banco-referencia.md`.
 - **RETORICA_ANCORADA** — cada item de `retorica` nomeia `fato_ancora` que o gate viu. Sem âncora → corta a figura, não o post inteiro.
 - **CTA_COMPLETO** — o fecho executa a fórmula do `cta_gatilho` declarado, não só o verbo “Envia”. MOEDA_SOCIAL precisa do “pra quem ainda acha que [crença]”. UTILIDADE precisa do “pra quem usa [ferramenta] no trabalho”. Se não couber no teto, **o teto cede** — o CTA é o slide que converte. Falhou → reescreve.
 - **MINIATURA_LEGIVEL** — reduzir cada slide a ~160px de largura (tamanho de feed) e conferir que o texto ainda se lê como *texto*, não como borrão. Slide ilegível em miniatura → reprova. (Referente: thumbnail real do feed, não a imagem em tela cheia.)
+- **LOOP_NA_CAPA** — a capa abre uma tensão que o slide 2 começa a responder (pergunta de tensão, promessa, contrarian, gap). Capa que só informa o fato → reprova. Referente: pergunta “por que eu deslizaria para o 02?”.
+- **RELEITURA** — depois de ler o carrossel inteiro, a capa ganha sentido novo (a peça escondida recontextualiza o gancho). Se a capa lida de novo significa a mesma coisa de antes → não é carrossel, é folheto. Referente: `fato_ouro` vs. primeira leitura da capa.
+- **PONTE_ENTREGA** — toda ponte anuncia a peça do próximo slide, e o próximo slide entrega exatamente ela. Ponte que promete uma coisa e entrega outra → reprova.
 
 **Parada:** se depois de reescrever ainda não passa, para e diz **qual** critério e por quê. Não entrega.
 
